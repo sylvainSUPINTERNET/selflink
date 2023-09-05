@@ -6,24 +6,54 @@
 import Image from 'next/image'
 import Link from 'next/link';
 
+import { motion } from "framer-motion";
+import { useSession } from 'next-auth/react';
+
 export default function Home() {
+  
+  const { data: session } = useSession();
+
+  if (session) {
+    console.log(session.user); // You'll have user.name, user.email, etc. based on your profile() method.
+  }
+
+  
   return (
     <main className='bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900'>
       <div className="bg-no-repeat h-screen bg-cover" style={{backgroundImage: 'url(https://preview.tailwindtemplates.co/basic/assets/images/banner-bg.svg)'}}>
 
         <div className="container mx-auto flex flex-col h-full">
 
-          <div className='justify-center mt-3 md:mt-[7em]'>
-            <div className="w-full text-center text-white">
-            <h1 className="font-extrabold  text-8xl text-white leading-1 tracking-tighter">
-              Self 
-              <span className='text-blue-500 ml-3'>
-              Link
-              </span>
-            </h1>
-            <p className="mt-10 md:mt-2 p-2 text-4xl md:text-6xl leading-1 font-bold tracking-tighter">Build your payment tunnel in 5 minutes</p>
+            <div className='justify-center mt-3 md:mt-[7em]'>
+              <div className="w-full text-center text-white">
+                <h1 className="font-extrabold  text-8xl text-white leading-1 tracking-tighter">
+                  Self 
+                  <span className='text-blue-500 ml-3'>
+                  Link
+                  </span>
+                </h1>
+                <motion.div
+              initial={{
+                x: 50,
+                opacity: 0,
+                scale: 1,
+              }}
+              animate={{
+                x: 0,
+                opacity: 1,
+                scale: 1,
+              }}
+              transition={{
+                duration: 0.1,
+              }}
+                > 
+                <p className="mt-10 md:mt-2 p-2 text-4xl md:text-6xl leading-1 font-bold tracking-tighter">Build your payment tunnel in 5 minutes</p>
+                </motion.div>
+
+              </div>
             </div>
-          </div>
+
+
 
           <div className="w-4/4 mb-3 mt-[3em]">
               <div className="flex text-center justify-center">
@@ -39,12 +69,27 @@ export default function Home() {
                   </div>
               </div>
           </div>
-
+        
 
 
           <div className="mockup-phone border-primary mt-10 shadow-lg shadow-blue-600 opacity-100 transition-opacity duration-300 " onLoad={(e) => e.currentTarget.style.opacity = "1"}>
             <div className="camera"></div> 
             <div className="display">
+            <motion.div
+              initial={{
+                x: 50,
+                opacity: 0,
+                scale: 1,
+              }}
+              animate={{
+                x: 0,
+                opacity: 1,
+                scale: 1,
+              }}
+              transition={{
+                duration: 0.1,
+              }}
+          >
               <div className="artboard artboard-demo phone-1">
                 <div className='bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900 h-screen w-full'>
                   <div className="bg-no-repeat h-screen bg-cover w-full" style={{backgroundImage: 'url(https://preview.tailwindtemplates.co/basic/assets/images/banner-bg.svg)'}}>
@@ -54,6 +99,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              </motion.div>
+
             </div>
           </div>
 
