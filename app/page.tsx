@@ -10,15 +10,43 @@ import { motion } from "framer-motion";
 import { useSession } from 'next-auth/react';
 
 export default function Home() {
-  
-  const { data: session } = useSession();
 
-  if (session) {
-    console.log(session.user); // You'll have user.name, user.email, etc. based on your profile() method.
+  const { data: session, status } = useSession();
+
+  // if (session) {
+  //   console.log("logged");
+  //   console.log(session.user); // You'll have user.name, user.email, etc. based on your profile() method.
+  // } else {
+  //   console.log("not logged");
+  // }
+
+  if (status === 'loading') {
+    return <div>Loading...</div>; // Or any other placeholder/loading UI
+  } else {
+    if ( status === 'authenticated' ) {
+      if ( session ) {
+        console.log("logged", session);
+      } else {
+        console.log("authenticated but error session is null ...");
+      }
+    } else {
+      console.log("not logged");
+    }
+    // if ( session ) {
+    //   console.log("logged", session);
+    // } else {
+    //   console.log("not logged");
+    // }
   }
 
-  
+  // if ( status === 'unauthenticated') {
+  // }
+
+  // if ( status === 'authenticated') {
+  // }
+
   return (
+    
     <main className='bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900'>
       <div className="bg-no-repeat h-screen bg-cover" style={{backgroundImage: 'url(https://preview.tailwindtemplates.co/basic/assets/images/banner-bg.svg)'}}>
 
