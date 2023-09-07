@@ -22,7 +22,6 @@ export const authOptions:NextAuthOptions = {
             }
         })
     ],
-    
     secret: process.env.NEXTAUTH_SECRET as string, // else session will be null
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {

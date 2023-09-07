@@ -1,5 +1,6 @@
-import { ReactNode, Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import Loading from "./loading";
+import AuthGuard from "../guard/authguard";
 
 // that's the point to use Suspens
 
@@ -17,7 +18,7 @@ export default function GetStarted() {
     return (
         // <Suspense fallback={Loading}>
         <Suspense fallback={Loading()}>
-            <LazyGetStartedComponent/>
+                <LazyGetStartedComponent/>
         </Suspense>
     );
 }
