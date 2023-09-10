@@ -1,12 +1,17 @@
+import React from "react"
 import AuthGuard from "../guard/authguard"
 
 export default function TestLayout({
     children, // will be a page or nested layout
-    linkform
+    linkform,
+    history
   }: {
     children: React.ReactNode,
-    linkform: React.ReactNode
+    linkform: React.ReactNode,
+    history: React.ReactNode
   }) {
+    
+    console.log(history);
     return (
       // <AuthGuard>
       <div className="bg-slate-100 h-screen">
@@ -45,6 +50,7 @@ export default function TestLayout({
                 {linkform}
               </div>
               <div className="bg-base-100 w-full p-6 rounded-xl shadow-lg">
+                {history}
                 {children}
               </div>
           </div>

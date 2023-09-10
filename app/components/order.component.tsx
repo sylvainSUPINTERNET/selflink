@@ -3,10 +3,12 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import AuthGuard from "../guard/authguard";
 import { useRouter } from "next/navigation";
 
-export default function GetStartedComponent(props: {sessionData: Session}) {
+export default function OrdersComponent(props: {sessionData: Session}) {
     return (
             <div>
-                start compo
+                <h1 className="p-3 rounded-lg text-2xl font-bold mb-1">Commandes</h1>
+                <p>Liste de commandes, trié par ID de lien</p>*
+                <p>On doit pouvoir voir le montant estimé - stripe frai + mes frai en sub</p>
             </div>
     )
 }

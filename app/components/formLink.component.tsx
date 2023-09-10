@@ -13,6 +13,12 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
     const onSubmitNewLink = ( data :any ) => {
         setLoadingSubmit(true);
         console.log(data);
+
+        // TODO call API 
+        // TODO s3 file
+        setTimeout(() => {
+            setLoadingSubmit(false);
+        }, 2000);
     }
 
     return (
@@ -28,13 +34,50 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         {errors.name && <p className="p-3 text-red-500 font-bold text-sm">Nom de produit non valide</p>}
                     </div>
 
-                    <div className="form-control">
-                        <label className="label">
-                        <span className="text-md font-bold">Prix unitaire<span className="text-red-500">*</span></span>
-                        </label>
-                        <input type="number" placeholder="2" className="input input-bordered font-bold" {...register("price", { required: true, min:2 })}/>
-                        {errors.price && <p className="p-3 text-red-500 font-bold text-sm">Prix unitaire du produit invalide, 2 euros minimum</p>}
+  
+                    
+                    <div className="md:flex justify-around space-x-2">
+                        <div className="form-control w-full">
+                            <label className="label">
+                            <span className="text-md font-bold">Prix unitaire<span className="text-red-500">*</span></span>
+                            </label>
+                            <input type="number" placeholder="2" className="input input-bordered font-bold" {...register("price", { required: true, min:2 })}/>
+                            {errors.price && <p className="p-3 text-red-500 font-bold text-sm">Prix unitaire du produit invalide, 2 euros minimum</p>}
+                        </div>
+
+                        <div className="form-control w-full">
+                            <label className="label">
+                            <span className="text-md font-bold">Devise<span className="text-red-500">*</span></span>
+                            </label>
+                            <select className="select select-bordered w-full" {...register("currency", { required: true })}>
+                                <option>EUR</option>
+                                <option>USD</option>
+                            </select>
+                            {errors.currency && <p className="p-3 text-red-500 font-bold text-sm">Devise non valide</p>}
+                        </div>
+
                     </div>
+
+
+                    <div className="md:flex justify-around space-x-2">
+                        <div className="form-control w-full">
+                            <label className="label">
+                            <span className="text-md font-bold">Catégorie<span className="text-red-500">*</span></span>
+                            </label>
+                            <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("category", { required: true })} />
+                            {errors.category && <p className="p-3 text-red-500 font-bold text-sm">Catégorie invalide</p>}
+                        </div>
+
+                        <div className="form-control w-full">
+                            <label className="label">
+                            <span className="text-md font-bold">Sous catégorie<span className="text-red-500">*</span></span>
+                            </label>
+                            <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("subcategory", { required: true })} />
+                            {errors.subcategory && <p className="p-3 text-red-500 font-bold text-sm">Sous catégorie invalide</p>}
+                        </div>
+                    </div>
+
+
 
                     <div className="form-control">
                         <label className="label">

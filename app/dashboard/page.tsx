@@ -8,7 +8,7 @@ const LazyGetStartedComponent = lazy(() => {
     // This delay simulates a longer module loading time
     return new Promise(resolve => {
         setTimeout(() => {
-            return resolve(import('../components/get-started.component') as any);
+            return resolve(import('../components/order.component') as any);
         }, 2000);
     });
 });
