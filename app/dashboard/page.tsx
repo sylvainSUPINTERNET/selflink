@@ -9,7 +9,7 @@ const LazyGetStartedComponent = lazy(() => {
     return new Promise(resolve => {
         setTimeout(() => {
             return resolve(import('../components/get-started.component') as any);
-        }, 10000);
+        }, 2000);
     });
 });
 
