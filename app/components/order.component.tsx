@@ -15,6 +15,11 @@ export default function OrdersComponent() {
 
     const [paymentLinks, setPaymentLinks] = useState<PaymentLink[] | null>(null);
 
+    const onChangePaymentLink = async (event:any) => {
+        alert("Change link !")
+        // TODO => fetch data for selected payment link
+    }
+
     useEffect ( () => {
 
         const fetchData = async () => {
@@ -51,6 +56,7 @@ export default function OrdersComponent() {
     return (
             <>
                 
+                {/* method to display price estimation *}
                 {/* TODO Display in select all paymentLinks ( id + email b64 ?) */}
                 { /* TODO Display list of order and pagination with cursor */}
 
@@ -63,10 +69,16 @@ export default function OrdersComponent() {
                     
                     <>
                         <h1 className="p-3 rounded-lg text-2xl font-bold mb-1">Commandes</h1>
+                        <div className="flex justify-end">
+                            <p className="font-medium text-lg">Estimation totale <span className="font-bold">300$</span> </p>
+                        </div>
 
-                        <select className="select select-primary w-full max-w-xs mb-5">
-                            <option>Lien 1234399</option>
-                            <option>Lien 102838</option>
+                        <select className="select select-primary w-full max-w-xs mb-5" onChange={onChangePaymentLink}>
+                            {
+                                paymentLinks && paymentLinks.map(link => (
+                                    <option key={link.id}>{`Lien ${link.id}`}</option>
+                                ))
+                            }
                         </select>
 
                         <div className="overflow-x-auto">
