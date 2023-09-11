@@ -13,7 +13,7 @@ export default function TestLayout({
     
     console.log(history);
     return (
-      <AuthGuard>
+      // <AuthGuard>
       <div className="bg-slate-100 h-screen">
           <section>
             {/* Include shared UI here e.g. a header or sidebar */}
@@ -56,6 +56,6 @@ export default function TestLayout({
           </div>
 
       </div>
-      </AuthGuard>
+      // </AuthGuard>
     )
   }
