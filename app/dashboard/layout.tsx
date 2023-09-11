@@ -11,7 +11,6 @@ export default function TestLayout({
     history: React.ReactNode
   }) {
     
-    console.log(history);
     return (
       // <AuthGuard>
       <div className="bg-slate-100 h-screen">
@@ -50,7 +49,7 @@ export default function TestLayout({
                 {linkform}
               </div>
               <div className="bg-base-100 w-full p-6 rounded-xl shadow-lg">
-                {history}
+                {/* {history} */}
                 {children}
               </div>
           </div>

@@ -1,15 +1,81 @@
+"use client";
+
 import { Session, getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import AuthGuard from "../guard/authguard";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-export default function OrdersComponent(props: {sessionData: Session}) {
+
+type PaymentLinkRaw = {
+    id: number
+}
+
+
+type PaymentLinkFormatted = {
+    id: number,
+    email: string
+} 
+
+export default function OrdersComponent(props: {sessionData: Session, paymentLinks: PaymentLinkFormatted[] }) {
+
+    const [paymentLinks, setPaymentLinks] = useState<PaymentLinkFormatted[] | null>(null);
+
+    useEffect ( () => {
+
+        const fetchData = async () => {
+            try {
+
+                // TODO handle error
+
+                const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink` , {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // TODO use token in authorization header ( must be checked on server side )
+                    },
+                    body: JSON.stringify({email: "email@email.com"}) // TODO email from session storage token ( use hook from next auth)
+                });
+                const {response} = await resp.json();
+                let {data: paymentLinkList}: {data:PaymentLinkRaw[]} = response;
+
+                let paymentLinkFormattedList: PaymentLinkFormatted[] = [];
+                if ( paymentLinkList && paymentLinkList.length > 0) { 
+            
+                    paymentLinkFormattedList = paymentLinkList.map( (paymentLink: PaymentLinkRaw) => {
+                        return {
+                            id: paymentLink.id,
+                            email: "email@email.com"  // TODO use user email extract from session ( ofc you need to reactive in layout <AuthGuard> )
+                        }
+                    })
+                }
+
+                console.log(paymentLinkFormattedList);
+
+                setPaymentLinks(paymentLinkFormattedList);
+
+            } catch (error) {
+              console.error('There was a problem with the fetch operation:', error);
+            }
+          };
+
+          fetchData();
+
+    }, []); 
+
     return (
             <div>
+                
+                {/* TODO Empty page if no paymentLinks */}
+                {/* TODO Display in select all paymentLinks ( id + email b64 ?) */}
+                { /* TODO Display list of order and pagination with cursor */}
+                                
+                <p>Test : {"ok" + paymentLinks?.length} </p>
+
                 <h1 className="p-3 rounded-lg text-2xl font-bold mb-1">Commandes</h1>
 
                 <select className="select select-primary w-full max-w-xs mb-5">
-                    <option disabled selected>Lien 1234399</option>
+                    <option>Lien 1234399</option>
                     <option>Lien 102838</option>
                 </select>
 
@@ -162,51 +228,6 @@ export default function OrdersComponent(props: {sessionData: Session}) {
                             <td>8/8/2020</td> 
                             <td>Crimson</td>
                         </tr>
-                        <tr>
-                            <th>16</th> 
-                            <td>Reid Semiras</td> 
-                            <td>Teacher</td> 
-                            <td>Sporer, Sipes and Rogahn</td> 
-                            <td>Poland</td> 
-                            <td>7/30/2020</td> 
-                            <td>Green</td>
-                        </tr>
-                        <tr>
-                            <th>17</th> 
-                            <td>Alec Lethby</td> 
-                            <td>Teacher</td> 
-                            <td>Reichel, Glover and Hamill</td> 
-                            <td>China</td> 
-                            <td>2/28/2021</td> 
-                            <td>Khaki</td>
-                        </tr>
-                        <tr>
-                            <th>18</th> 
-                            <td>Aland Wilber</td> 
-                            <td>Quality Control Specialist</td> 
-                            <td>Kshlerin, Rogahn and Swaniawski</td> 
-                            <td>Czech Republic</td> 
-                            <td>9/29/2020</td> 
-                            <td>Purple</td>
-                        </tr>
-                        <tr>
-                            <th>19</th> 
-                            <td>Teddie Duerden</td> 
-                            <td>Staff Accountant III</td> 
-                            <td>Pouros, Ullrich and Windler</td> 
-                            <td>France</td> 
-                            <td>10/27/2020</td> 
-                            <td>Aquamarine</td>
-                        </tr>
-                        <tr>
-                            <th>20</th> 
-                            <td>Lorelei Blackstone</td> 
-                            <td>Data Coordiator</td> 
-                            <td>Witting, Kutch and Greenfelder</td> 
-                            <td>Kazakhstan</td> 
-                            <td>6/3/2020</td> 
-                            <td>Red</td>
-                        </tr>
                         </tbody> 
                         <tfoot>
                         <tr>
@@ -234,16 +255,3 @@ export default function OrdersComponent(props: {sessionData: Session}) {
     )
 }
 
-// Pour la récupération des données côté serveur avec Next.js
-export async function getServerSideProps(context:any) {
-    const session = await getServerSession(authOptions);
-    
-    console.log("server side", session);
-
-    // Vous pouvez passer des données du serveur au composant via les props
-    return {
-        props: {
-            sessionData: session
-        }
-    };
-}
