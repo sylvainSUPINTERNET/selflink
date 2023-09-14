@@ -5,7 +5,8 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import AuthGuard from "../guard/authguard";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import useSWR from 'swr';
+import { EstimationOrder } from "./dashboard/estimation";
+
 
 
 
@@ -74,6 +75,7 @@ export default function OrdersComponent() {
                         <h1 className="p-3 rounded-lg text-2xl font-bold mb-1">Commandes</h1>
                         <div className="flex justify-end">
                             <p className="font-medium text-lg">Estimation totale <span className="font-bold">300$</span> </p>
+                            <EstimationOrder/>
                         </div>
 
                         <select className="select select-primary w-full max-w-xs mb-5" onChange={onChangePaymentLink}>
