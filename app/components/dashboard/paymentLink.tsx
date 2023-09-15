@@ -3,8 +3,9 @@ import { useEffect } from "react"
 import useSWR from "swr"
 
 
-type PaymentLink = {
-    id: number
+export type PaymentLink = {
+    id: number,
+    identifier: string
 }
 
 
@@ -42,7 +43,7 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink }: { chang
         <select className="select select-primary w-full max-w-xs mb-5" onChange={changePaymentLink}>
             {
                 data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.map((link:PaymentLink) => (
-                    <option key={link.id}>{`Lien ${link.id}`}</option>
+                    <option key={link.id} value={link.identifier}>{`n°${link.identifier}`}</option>
                 ))
             }
         </select>

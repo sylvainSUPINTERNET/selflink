@@ -1,12 +1,10 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
+import { PaymentLink } from "./paymentLink";
 
 // TODO : use real paymentLink + verif token
 const fetcher = (url:string) => axios.get(url).then(res => res.data)
-
-type PaymentLink = {
-    id: number
-}
 
 type Order = {
     orderId: number
@@ -17,15 +15,52 @@ type Order = {
     amount: number
 }
 
-export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | null}) => {
 
-    const size:number = 20;
+
+function displayPagination(count: string, size: number, offset: number) {
+    let countNb: number = parseInt(count);
+    let nbPage: number = Math.ceil(countNb / size);
+    let currentPage: number = Math.ceil(offset / size) + 1;
+    const maxButtons = 5; // Nombre maximal de boutons à afficher (vous pouvez ajuster ce nombre)
+
+    let startPage: number = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+    let endPage: number = Math.min(nbPage, startPage + maxButtons - 1);
+
+    // Ajustement si on a moins de boutons que maxButtons au départ
+    if (endPage - startPage + 1 < maxButtons && startPage > 1) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+    }
+
+    let pages: number[] = [];
+    for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+    }
+
+    return (
+        <div className="join flex justify-center mt-5">
+            {pages.map((page, index) => (
+                <button key={index} className={`join-item btn ${page === currentPage ? "btn-disabled" : ""}`}>
+                    {page}
+                </button>
+            ))}
+        </div>
+    );
+}
+
+
+export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | undefined}) => {
+
+    let size:number = 20;
+    let offset:number = 0;
 
     // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
-    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${"123454"}&offset=${0}&size=${size}`, fetcher);
+    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`, fetcher);
 
-    const {data: orderCount, error : errorOrderCount, isLoading : isLoadingOrderCount} = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${"123454"}`, fetcher);
+    const {data: orderCount, error : errorOrderCount, isLoading : isLoadingOrderCount} = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${paymentLinkInit}`, fetcher);
     
+    useEffect( () => {
+        console.log("order list eff")
+    }, [paymentLinkInit])
 
     if (error) return <div>
         <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -59,9 +94,11 @@ export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | null
     return <>
 
             { JSON.stringify(orderCount)}
+
+
             
             {
-                data?.response?.data && data.response.data.length > 0 ? 
+                orderCount?.response?.data && data?.response?.data && data.response.data.length > 0 ? 
                     <>
 
                     <div className="overflow-x-auto">
@@ -98,20 +135,14 @@ export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | null
                             </tbody> 
                         </table>
                     </div>
-
-                    <div className="join flex justify-center mt-5">
-                        <button className="join-item btn">1</button>
-                        <button className="join-item btn">2</button>
-                        <button className="join-item btn btn-disabled">...</button>
-                        <button className="join-item btn">99</button>
-                        <button className="join-item btn">100</button>
-                    </div> 
+                    
+                    {displayPagination(orderCount.response.data, size, offset)}
 
                     </>
                 :
                     <>
-                        <div className="flex justify-center items-center h-full">
-                            <p className="text-2xl font-medium">Pas de lien de paiement en cours pour le moment</p>
+                        <div className="flex justify-center items-center h-2/4">
+                            <p className="text-xl font-medium">Pas de commande en cours pour le moment</p>
                         </div>
                     </>
             }
