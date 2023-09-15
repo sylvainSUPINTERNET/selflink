@@ -4,16 +4,29 @@ import useSWR from "swr";
 // TODO : use real paymentLink + verif token
 const fetcher = (url:string) => axios.get(url).then(res => res.data)
 
-
 type PaymentLink = {
     id: number
 }
 
+type Order = {
+    orderId: number
+    quantity: number
+    createdAt: string
+    currency: string
+    productId: number
+    amount: number
+}
+
 export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | null}) => {
 
+    const size:number = 20;
+
     // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
-    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${"123454"}&offset=${0}&size=${20}`, fetcher);
+    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${"123454"}&offset=${0}&size=${size}`, fetcher);
+
+    const {data: orderCount, error : errorOrderCount, isLoading : isLoadingOrderCount} = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${"123454"}`, fetcher);
     
+
     if (error) return <div>
         <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
             <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -44,61 +57,67 @@ export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | null
     </>
 
     return <>
-            {
-                paymentLinkInit && paymentLinkInit != null && <p>LINK : {JSON.stringify(paymentLinkInit)}</p>
-            }
+
+            { JSON.stringify(orderCount)}
             
-            ORDERS LIST : {JSON.stringify(data)}
+            {
+                data?.response?.data && data.response.data.length > 0 ? 
+                    <>
 
-            <div className="overflow-x-auto">
-                <table className="table table-xs">
+                    <div className="overflow-x-auto">
+                        <table className="table table-xs text-center">
 
-                    <thead>
-                    <tr>
-                        <th></th> 
-                        <th>Name</th> 
-                        <th>Job</th> 
-                        <th>company</th> 
-                        <th>location</th> 
-                        <th>Last Login</th> 
-                        <th>Favorite Color</th>
-                    </tr>
-                    </thead> 
+                            <thead>
+                            <tr>
+                                <th></th> 
+                                <th>Command n°</th> 
+                                <th>Quantité</th> 
+                                <th>Date</th> 
+                                <th>Produit n°</th> 
+                                <th>Montant</th>
+                                <th>Devise</th>
+                            </tr>
+                            </thead> 
 
-                    <tbody>
-                    <tr>
-                        <th>1</th> 
-                        <td>Cy Ganderton</td> 
-                        <td>Quality Control Specialist</td> 
-                        <td>Littel, Schaden and Vandervort</td> 
-                        <td>Canada</td> 
-                        <td>12/16/2020</td> 
-                        <td>Blue</td>
-                    </tr>
-                    </tbody> 
+                            <tbody>
+                                {
+                                    data.response.data.map((order:Order, index:number) => {
+                                        return (<>
+                                            <tr key={index}>
+                                                <th>{index}</th>
+                                                <td>{order.orderId}</td>
+                                                <td>{order.quantity}</td>
+                                                <td>{order.createdAt}</td>
+                                                <td>{order.productId}</td>
+                                                <td>{(order.amount / 100).toFixed(2)}</td>
+                                                <td>{order.currency.toUpperCase()}</td>
+                                            </tr>
+                                        </>);
+                                    })
+                                }                            
+                            </tbody> 
+                        </table>
+                    </div>
 
-                    <tfoot>
-                    <tr>
-                        <th></th> 
-                        <th>Name</th> 
-                        <th>Job</th> 
-                        <th>company</th> 
-                        <th>location</th> 
-                        <th>Last Login</th> 
-                        <th>Favorite Color</th>
-                    </tr>
-                    </tfoot>
+                    <div className="join flex justify-center mt-5">
+                        <button className="join-item btn">1</button>
+                        <button className="join-item btn">2</button>
+                        <button className="join-item btn btn-disabled">...</button>
+                        <button className="join-item btn">99</button>
+                        <button className="join-item btn">100</button>
+                    </div> 
 
-                </table>
-            </div>
+                    </>
+                :
+                    <>
+                        <div className="flex justify-center items-center h-full">
+                            <p className="text-2xl font-medium">Pas de lien de paiement en cours pour le moment</p>
+                        </div>
+                    </>
+            }
 
-            <div className="join flex justify-center mt-5">
-                <button className="join-item btn">1</button>
-                <button className="join-item btn">2</button>
-                <button className="join-item btn btn-disabled">...</button>
-                <button className="join-item btn">99</button>
-                <button className="join-item btn">100</button>
-            </div>
+            
+
     </>
 
 }
