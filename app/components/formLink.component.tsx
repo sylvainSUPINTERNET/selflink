@@ -12,8 +12,6 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
 
     const onSubmitNewLink = ( data :any ) => {
         setLoadingSubmit(true);
-        console.log(data);
-
         // TODO call API 
         // TODO s3 file
         setTimeout(() => {

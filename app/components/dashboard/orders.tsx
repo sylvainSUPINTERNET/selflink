@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { PaymentLink } from "./paymentLink";
 
 // TODO : use real paymentLink + verif token
 const fetcher = (url:string) => axios.get(url).then(res => res.data)
@@ -15,43 +14,77 @@ type Order = {
     amount: number
 }
 
+function clickNextPage ( event:any, setCurrentPage:any, size: number, setOffset:any, currentPage: number ) {
 
+    const nextPage = parseInt(event.target.innerHTML);
 
-function displayPagination(count: string, size: number, offset: number) {
+    if ( nextPage === currentPage ) return;
+
+    const offset = (nextPage - 1) * size;
+    setOffset(offset)
+    setCurrentPage(parseInt(event.target.innerHTML))
+}
+
+function displayPagination(count: string, size: number, offset: number, setCurrentPage: any, setOffset: any) {
     let countNb: number = parseInt(count);
     let nbPage: number = Math.ceil(countNb / size);
     let currentPage: number = Math.ceil(offset / size) + 1;
-    const maxButtons = 5; // Nombre maximal de boutons à afficher (vous pouvez ajuster ce nombre)
-
-    let startPage: number = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-    let endPage: number = Math.min(nbPage, startPage + maxButtons - 1);
-
-    // Ajustement si on a moins de boutons que maxButtons au départ
-    if (endPage - startPage + 1 < maxButtons && startPage > 1) {
-        startPage = Math.max(1, endPage - maxButtons + 1);
+    const maxButtons = 5;
+    
+    let pages: number[] = [];
+    let startPage: number = Math.max(2, currentPage - Math.floor((maxButtons - 2) / 2)); // -2 pour la première et la dernière page
+    let endPage: number = Math.min(nbPage - 1, startPage + maxButtons - 3); // -3 pour la première page, la dernière page et la page actuelle
+    
+    if (startPage > 2) {
+        pages.push(1, -1); // -1 représentera un point de suspension
+    } else {
+        pages.push(1);
     }
 
-    let pages: number[] = [];
     for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
     }
 
+    if (endPage < nbPage - 1) {
+        pages.push(-2, nbPage); // -2 représentera un autre point de suspension
+    } else {
+        pages.push(nbPage);
+    }
+
     return (
         <div className="join flex justify-center mt-5">
-            {pages.map((page, index) => (
-                <button key={index} className={`join-item btn ${page === currentPage ? "btn-disabled" : ""}`}>
-                    {page}
-                </button>
-            ))}
+            {pages.map((page, index) => {
+                if (page < 0) {
+                    return <span key={index}     style={{
+                        backgroundColor: '#e2e8f0',
+                        borderRadius: '0.375rem',
+                        padding: '0.5rem 1rem',
+                        margin: '0 0.25rem',
+                        fontWeight: 500,
+                        fontSize: '1rem',
+                        display: 'inline-block'
+                    }}>...</span>; // Points de suspension
+                }
+                return (
+                    <button 
+                        key={index} 
+                        className={`join-item btn ${page === currentPage ? "btn-disabled" : ""}`} 
+                        onClick={e => clickNextPage(e, setCurrentPage, size, setOffset, currentPage)}>
+                        {page}
+                    </button>
+                );
+            })}
         </div>
     );
 }
 
 
-export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | undefined}) => {
 
-    let size:number = 20;
-    let offset:number = 0;
+export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:string | undefined}) => {
+
+    let [offset, setOffset] = useState<number>(0);
+    let [size, setSize] = useState<number>(20);
+    let [currentPage, setCurrentPage] = useState(1);
 
     // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
     const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`, fetcher);
@@ -59,8 +92,9 @@ export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | unde
     const {data: orderCount, error : errorOrderCount, isLoading : isLoadingOrderCount} = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${paymentLinkInit}`, fetcher);
     
     useEffect( () => {
-        console.log("order list eff")
-    }, [paymentLinkInit])
+        console.log("order list eff", paymentLinkInit)
+        console.log("Inside useEffect currentPage:", currentPage);
+    }, [paymentLinkInit, currentPage])
 
     if (error) return <div>
         <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -136,7 +170,7 @@ export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:PaymentLink | unde
                         </table>
                     </div>
                     
-                    {displayPagination(orderCount.response.data, size, offset)}
+                    {displayPagination(orderCount.response.data, size, offset, setCurrentPage, setOffset)}
 
                     </>
                 :

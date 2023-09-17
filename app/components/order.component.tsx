@@ -18,7 +18,7 @@ export default function OrdersComponent() {
 
     // TODO quand on change de lien de paiement, il faut fetch les nouvelles commandes
 
-    const [paymentLinkInit, setPaymentLinkInit] = useState<PaymentLink>();
+    const [paymentLinkInit, setPaymentLinkInit] = useState<string>();
 
 
     const onChangePaymentLink = async (event:any) => {
@@ -47,7 +47,8 @@ export default function OrdersComponent() {
                 
                 <PaymentLinkSelector changePaymentLink={onChangePaymentLink} setInitLink={setPaymentLinkInit}/>
 
-                <OrdersList paymentLinkInit={paymentLinkInit}/>
+                <OrdersList paymentLinkInit={ paymentLinkInit}/>
+                
 
                 </>
     
