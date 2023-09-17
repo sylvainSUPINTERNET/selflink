@@ -3,7 +3,17 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 // TODO : use real paymentLink + verif token
-const fetcher = (url:string) => axios.get(url).then(res => res.data)
+const fetcher = (url:string) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            axios.get(url)
+                .then(res => {
+                    resolve(res.data);
+                })
+                .catch(reject);
+        }, 250);
+    });
+}
 
 type Order = {
     orderId: number
@@ -127,13 +137,17 @@ export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:string | undefined
 
     return <>
 
-            { JSON.stringify(orderCount)}
-
+            
 
             
             {
                 orderCount?.response?.data && data?.response?.data && data.response.data.length > 0 ? 
                     <>
+
+                    <div className="flex justify-end mb-5">
+                        <p className="font-medium">Commandes en cours <span className="font-bold">{ orderCount.response.data }</span></p>
+                    </div>
+
 
                     <div className="overflow-x-auto">
                         <table className="table table-xs text-center">

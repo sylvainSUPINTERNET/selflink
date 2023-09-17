@@ -53,16 +53,23 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             </select>
                             {errors.currency && <p className="p-3 text-red-500 font-bold text-sm">Devise non valide</p>}
                         </div>
-
                     </div>
 
+
+                    <div className="form-control">
+                        <label className="label">
+                        <span className="text-md font-bold">IBAN<span className="text-red-500">*</span></span>
+                        </label>
+                        <input type="text" placeholder="IBAN" className="input input-bordered font-bold" {...register("iban", { required: true })}/>
+                        {errors.iban && <p className="p-3 text-red-500 font-bold text-sm">IBAN non valide</p>}
+                    </div>
 
                     <div className="md:flex justify-around space-x-2">
                         <div className="form-control w-full">
                             <label className="label">
                             <span className="text-md font-bold">Catégorie<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("category", { required: true })} />
+                            <input type="text" placeholder="Electronique" className="input input-bordered" {...register("category", { required: true })} />
                             {errors.category && <p className="p-3 text-red-500 font-bold text-sm">Catégorie invalide</p>}
                         </div>
 
@@ -70,7 +77,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             <label className="label">
                             <span className="text-md font-bold">Sous catégorie<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("subcategory", { required: true })} />
+                            <input type="text" placeholder="Téléphone" className="input input-bordered" {...register("subcategory", { required: true })} />
                             {errors.subcategory && <p className="p-3 text-red-500 font-bold text-sm">Sous catégorie invalide</p>}
                         </div>
                     </div>
@@ -90,29 +97,13 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         <span className="text-md font-bold">Image du produit<span className="text-red-500">*</span></span>
                         </label>
                         <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("images", { required: true })} />
+                        <div className="mt-2 text-md">
+                            <p>Pas d'image pour le moment ? héberger votre image sur <a className="text-blue-400" href="https://postimages.org">https://postimages.org</a></p>
+                        </div>
                         {errors.images && <p className="p-3 text-red-500 font-bold text-sm">URL invalide</p>}
+                        
+
                     </div>
-
-                    <div className="md:flex justify-around space-x-2">
-                        <div className="form-control w-full">
-                            <label className="label">
-                            <span className="text-md font-bold">Catégorie<span className="text-red-500">*</span></span>
-                            </label>
-                            <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("category", { required: true })} />
-                            {errors.category && <p className="p-3 text-red-500 font-bold text-sm">Catégorie invalide</p>}
-                        </div>
-
-                        <div className="form-control w-full">
-                            <label className="label">
-                            <span className="text-md font-bold">Sous catégorie<span className="text-red-500">*</span></span>
-                            </label>
-                            <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("subcategory", { required: true })} />
-                            {errors.subcategory && <p className="p-3 text-red-500 font-bold text-sm">Sous catégorie invalide</p>}
-                        </div>
-                    </div>
-
-
-
                     {/* Continuez avec les autres champs de la même manière... */}
 
                     <div className="form-control">
