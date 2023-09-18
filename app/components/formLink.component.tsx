@@ -1,8 +1,10 @@
 "use client";
 
 import { Session } from "next-auth";
-import { useReducer, useState } from "react";
+import { useState } from "react";
 import  { useForm }  from  "react-hook-form";
+
+let ibantools = require("ibantools")
 
 export default function FormLinkComponent(props: {sessionData: Session}) {
 
@@ -11,12 +13,51 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
     const [loadingSubmit, setLoadingSubmit] = useState(false);
 
     const onSubmitNewLink = ( data :any ) => {
+        
         setLoadingSubmit(true);
-        // TODO call API 
-        // TODO s3 file
-        setTimeout(() => {
-            setLoadingSubmit(false);
-        }, 2000);
+
+        setTimeout( async () => {
+
+            try {
+                const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL as string}/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "name": data.name,
+                        "price": data.price,
+                        "quantity": data.quantity,
+                        "currency": "EUR",
+                        "iban": data.iban,
+                        "category": data.category,
+                        "subcategory": data.subcategory,
+                        "description": data.description,
+                        "images": [data.images]
+                    })
+                });
+    
+                const res = await req.json();
+    
+                if  ( req.status === 200 ) {
+                    setLoadingSubmit(false);
+                    alert("added");
+                }else {
+                    setLoadingSubmit(false);
+                }
+    
+            } catch ( e ) {
+                // TODO handle error
+                setLoadingSubmit(false);
+            }
+
+        },2000)
+
+    }
+
+    //FR1420041010050500013M02606
+    function ibanValidation (ibanValue:any) {
+        return ibantools.isValidIBAN(`${ibanValue}`);
     }
 
     return (
@@ -45,6 +86,14 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
 
                         <div className="form-control w-full">
                             <label className="label">
+                            <span className="text-md font-bold">Quantité stock<span className="text-red-500">*</span></span>
+                            </label>
+                            <input type="number" placeholder="2" className="input input-bordered font-bold" {...register("quantity", { required: true, min:1 })}/>
+                            {errors.quantity && <p className="p-3 text-red-500 font-bold text-sm">Quantité invalide, minimum 1</p>}
+                        </div>
+
+                        <div className="form-control w-full">
+                            <label className="label">
                             <span className="text-md font-bold">Devise<span className="text-red-500">*</span></span>
                             </label>
                             <select className="select select-bordered w-full" {...register("currency", { required: true })}>
@@ -60,7 +109,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         <label className="label">
                         <span className="text-md font-bold">IBAN<span className="text-red-500">*</span></span>
                         </label>
-                        <input type="text" placeholder="IBAN" className="input input-bordered font-bold" {...register("iban", { required: true })}/>
+                        <input type="text" placeholder="IBAN" className="input input-bordered font-bold" {...register("iban", { required: true, validate: ibanValidation })}/>
                         {errors.iban && <p className="p-3 text-red-500 font-bold text-sm">IBAN non valide</p>}
                     </div>
 
@@ -77,7 +126,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             <label className="label">
                             <span className="text-md font-bold">Sous catégorie<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="Téléphone" className="input input-bordered" {...register("subcategory", { required: true })} />
+                            <input type="text" placeholder="Smartphone" className="input input-bordered" {...register("subcategory", { required: true })} />
                             {errors.subcategory && <p className="p-3 text-red-500 font-bold text-sm">Sous catégorie invalide</p>}
                         </div>
                     </div>
@@ -98,12 +147,13 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         </label>
                         <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("images", { required: true })} />
                         <div className="mt-2 text-md">
-                            <p>Pas d'image pour le moment ? héberger votre image sur <a className="text-blue-400" href="https://postimages.org">https://postimages.org</a></p>
+                            <p>Pas d'image pour le moment ? héberger votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a></p>
                         </div>
                         {errors.images && <p className="p-3 text-red-500 font-bold text-sm">URL invalide</p>}
-                        
-
                     </div>
+
+                    
+
                     {/* Continuez avec les autres champs de la même manière... */}
 
                     <div className="form-control">
