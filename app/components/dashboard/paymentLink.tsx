@@ -5,7 +5,8 @@ import useSWR from "swr"
 
 export type PaymentLink = {
     id: number,
-    identifier: string
+    identifier: string,
+    paymentUrl: string
 }
 
 
