@@ -15,13 +15,14 @@ const fetcher = (url:string) => axios.post(url, {
     "email": "email@email.com"
 }).then(res => res.data)
 
-export const PaymentLinkSelector = ({ changePaymentLink , setInitLink }: { changePaymentLink: any, setInitLink: any }) => {
+export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymentLinkUrl}: { changePaymentLink: any, setInitLink: any, setPaymentLinkUrl:any }) => {
     const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`, fetcher);
 
 
     useEffect( () => {
         console.log("effect selector link")
         setInitLink(data?.response?.data[0]?.paymentLinks[0].identifier);
+        setPaymentLinkUrl(data?.response?.data[0]?.paymentLinks[0].paymentUrl)
     }, [data]) 
     
     if (error) return <div>
@@ -41,12 +42,19 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink }: { chang
     </div>
 
     return <>
-        <select className="select select-primary w-full max-w-xs mb-5" onChange={changePaymentLink}>
+        <select className="select select-primary w-full max-w-xs mb-5" onChange={e => {
+            const filtered = data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.filter((link:PaymentLink) => link.identifier === e.target.value);
+            if ( filtered && filtered.length > 0 ) {
+                changePaymentLink(e.target.value, filtered[0].paymentUrl);
+            } else {
+                changePaymentLink(e.target.value, "Pas de lien de paiement");
+            }
+        } }>
             {
                 data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.map((link:PaymentLink) => (
                     <option key={link.id} value={link.identifier}>{`n°${link.identifier}`}</option>
                 ))
-            }
+            } 
         </select>
     </>
 

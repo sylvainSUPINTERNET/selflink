@@ -19,17 +19,18 @@ export default function OrdersComponent() {
     // TODO quand on change de lien de paiement, il faut fetch les nouvelles commandes
 
     const [paymentLinkInit, setPaymentLinkInit] = useState<string>();
+    const [paymentLinkInitUrl, setPaymentLinkInitUrl] = useState<string>();
 
-
-    const onChangePaymentLink = async (event:any) => {
-        setPaymentLinkInit(event.target.value)
+    const onChangePaymentLink = async (identifier:string, paymentUrl:string) => {
+        setPaymentLinkInit(identifier)
+        setPaymentLinkInitUrl(paymentUrl)
     }
 
     useEffect ( () => {
 
         console.log("EFFECT parent order compo");
 
-    }, [paymentLinkInit]);
+    }, [paymentLinkInit, paymentLinkInitUrl]);
 
 
     return (
@@ -45,9 +46,9 @@ export default function OrdersComponent() {
                 </div>
 
                 
-                <PaymentLinkSelector changePaymentLink={onChangePaymentLink} setInitLink={setPaymentLinkInit}/>
+                <PaymentLinkSelector changePaymentLink={onChangePaymentLink} setInitLink={setPaymentLinkInit} setPaymentLinkUrl={setPaymentLinkInitUrl}/>
 
-                <OrdersList paymentLinkInit={ paymentLinkInit}/>
+                <OrdersList paymentLinkInit={paymentLinkInit} paymentLinkInitUrl={paymentLinkInitUrl}/>
                 
 
                 </>

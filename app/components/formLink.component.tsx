@@ -3,14 +3,27 @@
 import { Session } from "next-auth";
 import { useState } from "react";
 import  { useForm }  from  "react-hook-form";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 let ibantools = require("ibantools")
 
 export default function FormLinkComponent(props: {sessionData: Session}) {
 
-    const { register, handleSubmit, formState:{errors} } = useForm();
+    const { register, handleSubmit, formState:{errors}, reset } = useForm();
 
     const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+    function isValidURL(val:string) {
+        var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?' + // port
+            '(\\/[-a-z\\d%_.~+]*)*' + // path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+        return !!pattern.test(val);
+    }
 
     const onSubmitNewLink = ( data :any ) => {
         
@@ -40,8 +53,19 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                 const res = await req.json();
     
                 if  ( req.status === 200 ) {
+                    toast.success('Lien de paiement ajouté !', {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    });
+
+                    reset()
                     setLoadingSubmit(false);
-                    alert("added");
                 }else {
                     setLoadingSubmit(false);
                 }
@@ -62,6 +86,20 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
 
     return (
             <div>
+                
+                <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                />
+
                 <h1 className="p-3 rounded-lg text-2xl font-bold mb-1">Générer un lien de paiement</h1>
 
                 <form className="p-4 space-y-4" onSubmit={handleSubmit(onSubmitNewLink)}>
@@ -70,7 +108,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         <span className="text-md font-bold">Nom du produit<span className="text-red-500">*</span></span>
                         </label>
                         <input type="text" placeholder="Nom de produit" className="input input-bordered font-bold" {...register("name", { required: true })}/>
-                        {errors.name && <p className="p-3 text-red-500 font-bold text-sm">Nom de produit non valide</p>}
+                        <div className="p-2">
+                            {errors.name && <p className=" text-red-500 font-bold text-sm">Nom de produit non valide</p>}
+                        </div>
                     </div>
 
   
@@ -81,7 +121,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             <span className="text-md font-bold">Prix unitaire<span className="text-red-500">*</span></span>
                             </label>
                             <input type="number" placeholder="2" className="input input-bordered font-bold" {...register("price", { required: true, min:2 })}/>
-                            {errors.price && <p className="p-3 text-red-500 font-bold text-sm">Prix unitaire du produit invalide, 2 euros minimum</p>}
+                            <div className="p-2">
+                                {errors.price && <p className=" text-red-500 font-bold text-sm">Prix invalide, 2 minimum</p>}
+                            </div>
                         </div>
 
                         <div className="form-control w-full">
@@ -89,7 +131,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             <span className="text-md font-bold">Quantité stock<span className="text-red-500">*</span></span>
                             </label>
                             <input type="number" placeholder="2" className="input input-bordered font-bold" {...register("quantity", { required: true, min:1 })}/>
-                            {errors.quantity && <p className="p-3 text-red-500 font-bold text-sm">Quantité invalide, minimum 1</p>}
+                            <div className="p-2">
+                                {errors.quantity && <p className=" text-red-500 font-bold text-sm">Quantité invalide, minimum 1</p>}
+                            </div>
                         </div>
 
                         <div className="form-control w-full">
@@ -100,7 +144,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                                 <option>EUR</option>
                                 <option>USD</option>
                             </select>
-                            {errors.currency && <p className="p-3 text-red-500 font-bold text-sm">Devise non valide</p>}
+                            <div className="p-2">
+                                {errors.currency && <p className="text-red-500 font-bold text-sm">Devise non valide</p>}
+                            </div>
                         </div>
                     </div>
 
@@ -145,7 +191,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         <label className="label">
                         <span className="text-md font-bold">Image du produit<span className="text-red-500">*</span></span>
                         </label>
-                        <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("images", { required: true })} />
+                        <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("images", { required: true , validate:isValidURL})} />
                         <div className="mt-2 text-md">
                             <p>Pas d'image pour le moment ? héberger votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a></p>
                         </div>

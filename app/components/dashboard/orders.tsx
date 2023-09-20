@@ -90,7 +90,7 @@ function displayPagination(count: string, size: number, offset: number, setCurre
 
 
 
-export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:string | undefined}) => {
+export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkInit:string | undefined, paymentLinkInitUrl: string|undefined}) => {
 
     let [offset, setOffset] = useState<number>(0);
     let [size, setSize] = useState<number>(20);
@@ -138,6 +138,11 @@ export const OrdersList = ({paymentLinkInit}:{paymentLinkInit:string | undefined
     return <>
 
             
+        <div className="flex justify-start mt-2 p-2">
+            {
+                paymentLinkInitUrl ? <a className="link link-primary font-bold" href={paymentLinkInitUrl} target="blank">{paymentLinkInitUrl}</a> : <p>""</p>
+            }
+        </div>
 
             
             {
