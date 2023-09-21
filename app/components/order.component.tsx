@@ -48,8 +48,7 @@ export default function OrdersComponent() {
                 
                 <PaymentLinkSelector changePaymentLink={onChangePaymentLink} setInitLink={setPaymentLinkInit} setPaymentLinkUrl={setPaymentLinkInitUrl}/>
 
-                <OrdersList paymentLinkInit={paymentLinkInit} paymentLinkInitUrl={paymentLinkInitUrl}/>
-                
+                <OrdersList paymentLinkInit={paymentLinkInit} paymentLinkInitUrl={paymentLinkInitUrl}/>    
 
                 </>
     
