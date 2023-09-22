@@ -187,7 +187,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkIni
                     </div>
                  </>
                 : 
-                <p>""</p>
+                <p></p>
             }
         </div>
 
