@@ -64,11 +64,13 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
             })
 
             const {data:orderCountData} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${paymentLinkInit}`);
+            console.log("ORDER COUNT");
             setOrderCount(parseInt(orderCountData.response.data));
 
             const {data:estimateAmountData} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/total?paymentLink=${paymentLinkInit}`);
             setAmountEstimate(parseInt(estimateAmountData.response.data))
-
+            console.log("ESTIMATE AMOUNT");
+            
             if ( data.response) {
                 setStock(data.response.data.stock)
             }
