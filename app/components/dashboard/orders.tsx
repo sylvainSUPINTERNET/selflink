@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import ResponsivePagination from 'react-responsive-pagination';
+import "./order.css"
 
 // TODO : use real paymentLink + verif token
 const fetcher = (url:string) => {
@@ -24,85 +26,17 @@ type Order = {
     amount: number
 }
 
-function clickNextPage ( event:any, setCurrentPage:any, size: number, setOffset:any, currentPage: number ) {
 
-    const nextPage = parseInt(event.target.innerHTML);
-
-    if ( nextPage === currentPage ) return;
-
-    const offset = (nextPage - 1) * size;
-    setOffset(offset)
-    setCurrentPage(parseInt(event.target.innerHTML))
-}
-
-function linkColor (stock:number):string {
-    return stock > 0 ? "blue" : "red";
-}
-
-function displayPagination(count: string, size: number, offset: number, setCurrentPage: any, setOffset: any) {
-    let countNb: number = parseInt(count);
-    let nbPage: number = Math.ceil(countNb / size);
-    let currentPage: number = Math.ceil(offset / size) + 1;
-    const maxButtons = 5;
-    
-    let pages: number[] = [];
-    let startPage: number = Math.max(2, currentPage - Math.floor((maxButtons - 2) / 2)); // -2 pour la première et la dernière page
-    let endPage: number = Math.min(nbPage - 1, startPage + maxButtons - 3); // -3 pour la première page, la dernière page et la page actuelle
-    
-    if (startPage > 2) {
-        pages.push(1, -1); // -1 représentera un point de suspension
-    } else {
-        pages.push(1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-    }
-
-    if (endPage < nbPage - 1) {
-        pages.push(-2, nbPage); // -2 représentera un autre point de suspension
-    } else {
-        pages.push(nbPage);
-    }
-
-    return (
-        <div className="join flex justify-center mt-5">
-            {pages.map((page, index) => {
-                if (page < 0) {
-                    return <span key={index}     style={{
-                        backgroundColor: '#e2e8f0',
-                        borderRadius: '0.375rem',
-                        padding: '0.5rem 1rem',
-                        margin: '0 0.25rem',
-                        fontWeight: 500,
-                        fontSize: '1rem',
-                        display: 'inline-block'
-                    }}>...</span>; // Points de suspension
-                }
-                return (
-                    <button 
-                        key={index} 
-                        className={`join-item btn ${page === currentPage ? "btn-disabled" : ""}`} 
-                        onClick={e => clickNextPage(e, setCurrentPage, size, setOffset, currentPage)}>
-                        {page}
-                    </button>
-                );
-            })}
-        </div>
-    );
-}
-
-export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkInit:string | undefined, paymentLinkInitUrl: string|undefined}) => {
+export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffset}:{paymentLinkInit:string | undefined, paymentLinkInitUrl: string|undefined, offset:any, setOffset:any}) => {
 
     let [stock, setStock] = useState<number>(0);
-    let [offset, setOffset] = useState<number>(0);
     let [size, setSize] = useState<number>(20);
     let [currentPage, setCurrentPage] = useState(1);
 
+    let [orderCount, setOrderCount] = useState<any>();
+
     // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
     const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`, fetcher);
-
-    const {data: orderCount, error : errorOrderCount, isLoading : isLoadingOrderCount} = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${paymentLinkInit}`, fetcher);
     
     useEffect( () => {
         console.log("order list eff", paymentLinkInit)
@@ -119,10 +53,16 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkIni
                 }
             })
 
-            setStock(data.response.data.stock)
+            const {data:orderCountData} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${paymentLinkInit}`);
+            setOrderCount(parseInt(orderCountData.response.data));
+
+
+            if ( data.response) {
+                setStock(data.response.data.stock)
+            }
         }
         fetchData()
-    }, [paymentLinkInit, currentPage, stock])
+    }, [paymentLinkInit, currentPage, stock, orderCount])
 
     if (error) return <div>
         <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -156,6 +96,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkIni
     return <>
             
         <div className="mt-2 p-2 mb-3">
+
             {
                 paymentLinkInitUrl ? <>
                     <div className="flex justify-end">
@@ -193,11 +134,11 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkIni
 
             
             {
-                orderCount?.response?.data && data?.response?.data && data.response.data.length > 0 ? 
+                orderCount ? 
                     <>
 
                     <div className="flex justify-end mb-5">
-                        <p className="font-medium">Commandes en cours <span className="font-bold">{ orderCount.response.data }</span></p>
+                        <p className="font-medium">Commandes en cours <span className="font-bold">{ orderCount }</span></p>
                     </div>
                     
 
@@ -219,7 +160,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkIni
 
                             <tbody>
                                 {
-                                    data.response.data.map((order:Order, index:number) => {
+                                    (data as unknown as any).response.data.map((order:Order, index:number) => {
                                         return (<>
                                             <tr key={index}>
                                                 <th>{index}</th>
@@ -236,10 +177,23 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl}:{paymentLinkIni
                             </tbody> 
                         </table>
                     </div>
-                    
-                    {displayPagination(orderCount.response.data, size, offset, setCurrentPage, setOffset)}
+
+                                                
+                        <div className="mt-5">
+                            <ResponsivePagination
+                            total={Math.ceil(orderCount / size) }
+                            previousLabel="‹" nextLabel="›"
+                            current={currentPage}
+                            onPageChange={page => {
+                                setOffset((page-1) * size)
+                                setCurrentPage(page)
+                        }}
+                            />
+                        </div>
 
                     </>
+
+
                 :
                     <>
                         <div className="flex justify-center items-center h-2/4">

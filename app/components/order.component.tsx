@@ -21,16 +21,19 @@ export default function OrdersComponent() {
     const [paymentLinkInit, setPaymentLinkInit] = useState<string>();
     const [paymentLinkInitUrl, setPaymentLinkInitUrl] = useState<string>();
 
+    const [offset, setOffset] = useState<any>(0);
+
     const onChangePaymentLink = async (identifier:string, paymentUrl:string) => {
         setPaymentLinkInit(identifier)
         setPaymentLinkInitUrl(paymentUrl)
+        setOffset(0);
     }
 
     useEffect ( () => {
 
         console.log("EFFECT parent order compo");
 
-    }, [paymentLinkInit, paymentLinkInitUrl]);
+    }, [paymentLinkInit, paymentLinkInitUrl, offset]);
 
 
     return (
@@ -48,7 +51,7 @@ export default function OrdersComponent() {
                 
                 <PaymentLinkSelector changePaymentLink={onChangePaymentLink} setInitLink={setPaymentLinkInit} setPaymentLinkUrl={setPaymentLinkInitUrl}/>
 
-                <OrdersList paymentLinkInit={paymentLinkInit} paymentLinkInitUrl={paymentLinkInitUrl}/>    
+                <OrdersList paymentLinkInit={paymentLinkInit} paymentLinkInitUrl={paymentLinkInitUrl} offset={offset} setOffset={setOffset}/>    
 
                 </>
     
