@@ -33,7 +33,8 @@ type Order = {
     shippingName: string;
     phoneNumber: string;
     buyerEmail: string;
-    productname: string
+    productname: string;
+    status: "pending" | "shipped"
 }
 
 
@@ -214,9 +215,19 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div className="bg-red-500 p-2 text-center rounded-lg text-white shadow-lg">
-                                                        En attente
-                                                    </div>
+                                                <div>
+                                                    {
+                                                    order.status === "pending" ? 
+                                                        <div className="bg-red-500 p-2 text-center rounded-lg text-white shadow-lg">
+                                                            En attente
+                                                        </div>
+                                                     : 
+                                                        <div className="bg-green-500 p-2 text-center rounded-lg text-white shadow-lg">
+                                                            Envoyé
+                                                        </div>
+                                                     }
+                                                </div>
+    
                                                 </td>
                                             </tr>
                                         </>);
