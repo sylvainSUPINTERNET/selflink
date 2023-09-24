@@ -43,13 +43,12 @@ export default function TestLayout({
               </div>
             </nav>
           </section>
-                      
+
           <div className="flex flex-col md:flex-row justify-center container mx-auto mt-10 md:space-x-2 space-y-2 md:space-y-0">
               <div className="bg-base-100 w-full p-6 rounded-xl shadow-lg">
                 {linkform}
               </div>
               <div className="bg-base-100 w-full p-6 rounded-xl shadow-lg">
-                {/* {history} */}
                 {children}
               </div>
           </div>

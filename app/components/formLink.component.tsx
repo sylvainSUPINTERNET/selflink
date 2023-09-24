@@ -199,9 +199,6 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                     </div>
 
                     
-
-                    {/* Continuez avec les autres champs de la même manière... */}
-
                     <div className="form-control">
                         {
                             !errors.name && !errors.price && !errors.description && !errors.images && !errors.category && !errors.subcategory ? (
@@ -224,7 +221,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             )
                         }
                     </div>
-                </form>
+                </form> 
+
+
             </div>
     )
 }
