@@ -42,20 +42,28 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
     </div>
 
     return <>
-        <select className="select select-primary w-full max-w-xs mb-5" onChange={e => {
-            const filtered = data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.filter((link:PaymentLink) => link.identifier === e.target.value);
-            if ( filtered && filtered.length > 0 ) {
-                changePaymentLink(e.target.value, filtered[0].paymentUrl);
-            } else {
-                changePaymentLink(e.target.value, "Pas de lien de paiement");
-            }
-        } }>
-            {
-                data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.map((link:PaymentLink) => (
-                    <option key={link.id} value={link.identifier}>{`n°${link.identifier}`}</option>
-                ))
-            } 
-        </select>
+        <div className="flex space-x-3">
+
+            <select className="select select-primary w-full max-w-xs mb-5" onChange={e => {
+                const filtered = data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.filter((link:PaymentLink) => link.identifier === e.target.value);
+                if ( filtered && filtered.length > 0 ) {
+                    changePaymentLink(e.target.value, filtered[0].paymentUrl);
+                } else {
+                    changePaymentLink(e.target.value, "Pas de lien de paiement");
+                }
+            } }>
+                {
+                    data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.map((link:PaymentLink) => (
+                        <option key={link.id} value={link.identifier}>{`n°${link.identifier}`}</option>
+                    ))
+                } 
+            </select>
+        </div>
+
+        <div className="alert shadow-lg font-medium mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>En cas de rupture de stock, le lien sera désactivé automatiquement</span>
+        </div>
     </>
 
 }

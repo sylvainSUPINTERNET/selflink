@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, {mutate} from "swr";
 import ResponsivePagination from 'react-responsive-pagination';
 import "./order.css"
 
@@ -58,21 +58,30 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
         }
     }
 
-    const saveOrderStatus = () => {
-        console.log("save order status", tagged)
+    const saveOrderStatus = async () => {
+        try {
+            const {data} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    "orderIds": tagged
+                }
+            });
+        } catch ( e ) {
+            // TODO
+        }
+
         setTagged([]);
+        mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`) 
     }
 
     const generateCellBg = (order:Order) => {
         if ( tagged.includes(order.orderId) ) {
-            if ( order.status === "pending" ) {
-                return "bg-green-100";
-            } else {
-                return "bg-red-100";
-            }
-    
+            return "border-l-green-400 border-l-8";
         } else {
-            return "bg-white";
+            return "border-l-0";
         }
     }
     // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
@@ -161,9 +170,9 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                         <div>
                             {
                                 stock > 0 ?
-                                    <p className="font-medium">Stock <span className="font-bold">{ stock }</span></p>
+                                    <p className="font-medium">Stock produit <span className="font-bold">{ stock }</span></p>
                                 :
-                                    <p className="font-medium">Stock épuisé <span className="font-bold">{ stock }</span></p>
+                                    <p className="font-medium">Stock produit épuisé <span className="font-bold">{ stock }</span></p>
                             }
                         </div>
                     </div>
@@ -196,8 +205,8 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                 orderCount ? 
                     <>
 
-                    <div className="flex justify-end mb-5">
-                        <p className="font-medium">Commandes en cours <span className="font-bold">{ orderCount }</span></p>
+                    <div className="flex justify-start mb-5">
+                        <p className="font-medium">Commandes total <span className="font-bold">{ orderCount }</span></p>
                     </div>
                     
 
@@ -248,13 +257,13 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                                         <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg" onClick={e=>{
                                                             changeOrderStatus(e, order)
                                                         }}>
-                                                            { tagged.includes(order.orderId) ? "Archiver" : "Valider" }
+                                                            { tagged.includes(order.orderId) ? "Envoyé" : "Attente" }
                                                         </div>
                                                      : 
-                                                        <div className="cursor-pointer  p-2 text-center rounded-lg text-black shadow-lg" onClick={e=>{
+                                                        <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg"  onClick={e=>{
                                                             changeOrderStatus(e, order)
                                                         }}>
-                                                            { tagged.includes(order.orderId) ? "Valider" : "Archiver" }
+                                                            { tagged.includes(order.orderId) ? "Attente" : "Envoyé" }
                                                         </div>
                                                      }
                                                 </div>
