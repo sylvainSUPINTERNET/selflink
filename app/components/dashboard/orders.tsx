@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { DOMElement, useEffect, useState } from "react";
 import useSWR, {mutate} from "swr";
 import ResponsivePagination from 'react-responsive-pagination';
 import "./order.css"
@@ -34,7 +34,9 @@ type Order = {
     phoneNumber: string;
     buyerEmail: string;
     productname: string;
-    status: "pending" | "shipped"
+    status: "pending" | "shipped",
+    refund: boolean;
+    paymentIntentId: string;
 }
 
 
@@ -46,7 +48,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
     let [currentPage, setCurrentPage] = useState(1);
     let [orderCount, setOrderCount] = useState<any>();
     let [amountEstimate, setAmountEstimate] = useState<number>(0);
-
+    let [orderToRefund, setOrderToRefund] = useState<Order|null>(null);
     let [tagged, setTagged] = useState<Array<any>>([]);
     
     const changeOrderStatus = (ev:any, order:Order) => {
@@ -56,6 +58,41 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
         } else {
             setTagged([...tagged, order.orderId]);
         }
+    }
+
+    const refund = async ( ev:any, order:Order ) => {
+
+        if ( document != null) {
+            if ( document.getElementById('my_modal_3') != null && order.refund === false) {
+                setOrderToRefund(order);
+                (document.getElementById('my_modal_3') as any).showModal();
+            }
+        }
+    }
+
+    const confirmRefund = async (ev:any) => {
+
+        if ( orderToRefund != null ) {
+            try {
+                const {data} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/refund`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        "paymentIntentId": orderToRefund.paymentIntentId
+                    }
+                });
+    
+                mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`);
+    
+            } catch ( e ) {
+                // TODO
+                
+                alert("Erreur est survenue")
+            }
+        }
+
     }
 
     const saveOrderStatus = async () => {
@@ -147,6 +184,24 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
     </>
 
     return <>
+
+        <dialog id="my_modal_3" className="modal">
+            <div className="modal-box">
+                {/* <form method="dialog">
+                if there is a button in form, it will close the modal
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form> */}
+                <h3 className="font-bold text-2xl text-center mt-3 mb-3">Demande de remboursement</h3>
+                <div className=" mt-3">
+                    <form method="dialog" action="">
+                        <div className="flex justify-evenly py-4">
+                            <button className="btn btn-success  bg-green-600 rounded text-lg md:text-2xl text-white font-medium cursor-pointer" onClick={e=> confirmRefund(e)}>Confirmer</button>
+                            <button className="btn btn-error  bg-red-600 rounded text-lg md:text-2xl text-white font-medium cursor-pointer">Annuler</button>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+        </dialog>
             
         <div className="mt-2 p-2 mb-3">
 
@@ -217,6 +272,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                             <thead>
                             <tr className="text-center">
                                 <th>Produit</th>
+                                <th>Remboursement</th>
                                 <th>Commande</th> 
                                 <th>Montant</th>
                                 <th>Info livraison</th>
@@ -230,6 +286,17 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                         return (<>
                                             <tr key={index} className={generateCellBg(order)}>
                                                 <td>{order.productname}</td>
+                                                <td>
+                                                    {
+                                                        order.refund === true ? <div>
+                                                           <button className="btn btn-disabled" >Rembourser</button>
+                                                        </div>
+                                                        :
+                                                        <>
+                                                            <button className="btn btn-primary" onClick={e => refund(e, order)}>Rembourser</button>
+                                                        </>
+                                                    }   
+                                                </td>
                                                 <td>
                                                     <div className="text-left">
                                                         <p className="mb-3">n° <span className="font-bold">{order.orderId}</span></p>
@@ -251,23 +318,42 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                                     </div>
                                                 </td>
                                                 <td>
-                                                <div>
-                                                    {
-                                                    order.status === "pending" ? 
-                                                        <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg" onClick={e=>{
-                                                            changeOrderStatus(e, order)
-                                                        }}>
-                                                            { tagged.includes(order.orderId) ? "Envoyé" : "Attente" }
-                                                        </div>
-                                                     : 
-                                                        <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg"  onClick={e=>{
-                                                            changeOrderStatus(e, order)
-                                                        }}>
-                                                            { tagged.includes(order.orderId) ? "Attente" : "Envoyé" }
-                                                        </div>
-                                                     }
-                                                </div>
-    
+                                                    <div>
+
+                                                        {
+                                                            order.refund === true ?
+                                                            <>
+                                                                <div className="p-2 text-center rounded-lg btn btn-disabled">
+                                                                    Remboursé
+                                                                </div>
+                                                            </>
+                                                            :
+                                                            <>
+                                                            
+                                                                {
+                                                                    order.status === "pending" ? 
+                                                                        <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg" onClick={e=>{
+                                                                            changeOrderStatus(e, order)
+                                                                        }}>
+                                                                            { tagged.includes(order.orderId) ? "Envoyé" : "Attente" }
+                                                                        </div>
+                                                                    : 
+                                                                        <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg"  onClick={e=>{
+                                                                            changeOrderStatus(e, order)
+                                                                        }}>
+                                                                            { tagged.includes(order.orderId) ? "Attente" : "Envoyé" }
+                                                                        </div>
+                                                                }
+                                                            
+                                                            </>
+                                                        }
+
+                                                        
+
+
+
+                                                    </div>
+
                                                 </td>
                                             </tr>
                                         </>);

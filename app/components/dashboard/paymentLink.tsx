@@ -21,8 +21,11 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
 
     useEffect( () => {
         console.log("effect selector link")
-        setInitLink(data?.response?.data[0]?.paymentLinks[0].identifier);
-        setPaymentLinkUrl(data?.response?.data[0]?.paymentLinks[0].paymentUrl)
+        if ( data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.length > 0 ) {
+            setInitLink(data?.response?.data[0]?.paymentLinks[0].identifier);
+            setPaymentLinkUrl(data?.response?.data[0]?.paymentLinks[0].paymentUrl)
+        }
+
     }, [data]) 
     
     if (error) return <div>
