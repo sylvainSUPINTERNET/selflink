@@ -1,12 +1,12 @@
 import axios from "axios"
 import { useEffect } from "react"
-import useSWR from "swr"
-
+import useSWR, { mutate } from "swr"
 
 export type PaymentLink = {
     id: number,
     identifier: string,
-    paymentUrl: string
+    paymentUrl: string,
+    name: string
 }
 
 
@@ -27,6 +27,11 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
         }
 
     }, [data]) 
+
+
+    const refreshLink = () => {
+        mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`);
+    }
     
     if (error) return <div>
         <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -47,7 +52,7 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
     return <>
         <div className="flex space-x-3">
 
-            <select className="select select-primary w-full max-w-xs mb-5" onChange={e => {
+            <select onClick={e => refreshLink()} className="select select-primary w-full max-w-xs mb-5" onChange={e => {
                 const filtered = data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.filter((link:PaymentLink) => link.identifier === e.target.value);
                 if ( filtered && filtered.length > 0 ) {
                     changePaymentLink(e.target.value, filtered[0].paymentUrl);
@@ -57,7 +62,7 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
             } }>
                 {
                     data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.map((link:PaymentLink) => (
-                        <option key={link.id} value={link.identifier}>{`n°${link.identifier}`}</option>
+                        <option key={link.id} value={link.identifier}>{`${link.name}`}</option>
                     ))
                 } 
             </select>

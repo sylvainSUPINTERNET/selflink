@@ -1,18 +1,29 @@
 "use client";
 
 import { Session } from "next-auth";
-import { useState } from "react";
-import  { useForm }  from  "react-hook-form";
+import { createContext, useContext, useState } from "react";
+import  { useForm, Controller }  from  "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 
 let ibantools = require("ibantools")
+const animatedComponents = makeAnimated();
 
 export default function FormLinkComponent(props: {sessionData: Session}) {
 
-    const { register, handleSubmit, formState:{errors}, reset } = useForm();
+    const { register, handleSubmit, formState:{errors}, reset, control } = useForm();
 
     const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+    const options = [
+        { label: 'FR', value: 'FR' },
+        { label: 'ES', value: 'ES' },
+        { label: 'IT', value: 'IT' },
+        { label: 'DE', value: 'DE' },
+        { label: 'GB', value: 'GB' }
+    ];
 
     function isValidURL(val:string) {
         var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
@@ -46,7 +57,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         "category": data.category,
                         "subcategory": data.subcategory,
                         "description": data.description,
-                        "images": [data.images]
+                        "images": [data.images],
+                        "linkName": data.linkName,
+                        "countriesShipping": data.countries.map((country:any) => country.value)
                     })
                 });
     
@@ -103,15 +116,56 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                 <h1 className="p-3 rounded-lg text-2xl font-bold mb-1">Générer un lien de paiement</h1>
 
                 <form className="p-4 space-y-4" onSubmit={handleSubmit(onSubmitNewLink)}>
-                    <div className="form-control">
-                        <label className="label">
-                        <span className="text-md font-bold">Nom du produit<span className="text-red-500">*</span></span>
-                        </label>
-                        <input type="text" placeholder="Nom de produit" className="input input-bordered font-bold" {...register("name", { required: true })}/>
-                        <div className="p-2">
-                            {errors.name && <p className=" text-red-500 font-bold text-sm">Nom de produit non valide</p>}
+                    
+                    <div className="md:flex justify-around space-x-2">
+                        <div className="form-control w-full">
+                            <label className="label">
+                            <span className="text-md font-bold">Nom du produit<span className="text-red-500">*</span></span>
+                            </label>
+                            <input type="text" placeholder="Nom de produit" className="input input-bordered font-bold" {...register("name", { required: true, maxLength:100, minLength:1 })}/>
+                            <div className="p-2">
+                                {errors.name && <p className=" text-red-500 font-bold text-sm">Nom de produit non valide</p>}
+                            </div>
+                        </div>
+
+                        <div className="form-control w-full">
+                            <label className="label">
+                            <span className="text-md font-bold">Nom du lien<span className="text-red-500">*</span></span>
+                            </label>
+                            <input type="text" placeholder="Nom du lien" className="input input-bordered" {...register("linkName", { required: true, maxLength:100, minLength:1 })} />
+                            {errors.linkName && <p className="p-3 text-red-500 font-bold text-sm">Nom du lien invalide</p>}
                         </div>
                     </div>
+
+
+
+                        <Controller
+                        name="countries"
+                        control={control}
+                        rules={{ required: "Ce champ est requis." }}
+                        defaultValue={[
+                            {
+                                label: 'FR',
+                                value: 'FR'
+                            }
+                        ]}
+                            render={({ field, fieldState }) => (
+                                <div>
+                                    <Select
+                                        {...field}
+                                        options={options}
+                                        isMulti
+                                        closeMenuOnSelect={false}
+                                        components={animatedComponents}
+                                        noOptionsMessage={() => 'Aucune option'}
+                                        openMenuOnClick={true}
+                                        isSearchable={true}
+                                    />
+                                    {fieldState.invalid && <p className="p-3 text-red-500 font-bold text-sm">{fieldState.error?.message}</p>}
+                                </div>
+      
+                                )}
+                            />
 
   
                     
@@ -142,7 +196,6 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             </label>
                             <select className="select select-bordered w-full" {...register("currency", { required: true })}>
                                 <option>EUR</option>
-                                <option>USD</option>
                             </select>
                             <div className="p-2">
                                 {errors.currency && <p className="text-red-500 font-bold text-sm">Devise non valide</p>}

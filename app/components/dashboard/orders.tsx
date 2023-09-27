@@ -307,7 +307,9 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                                 <td>
                                                     <div className="text-left">
                                                         <p>Pays: <span className="font-bold">{order.shippingCountry}</span></p>
-                                                        <p>Dept: <span className="font-bold">{order.shippingState}</span></p>
+                                                        {
+                                                            order.shippingState === "" ? <></> : <p>Province: <span className="font-bold">{order.shippingState}</span></p>
+                                                        }
                                                         <p>Code: <span className="font-bold">{order.shippingPostalCode}</span></p>
                                                         <p>Ville: <span className="font-bold">{order.shippingCity}</span></p>
                                                         <p>Adresse: <span className="font-bold">{order.shippingLine1}</span></p>
