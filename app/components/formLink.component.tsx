@@ -54,8 +54,8 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         "quantity": data.quantity,
                         "currency": "EUR",
                         "iban": data.iban,
-                        "category": data.category,
-                        "subcategory": data.subcategory,
+                        // "category": data.category,
+                        // "subcategory": data.subcategory,
                         "description": data.description,
                         "images": [data.images],
                         "linkName": data.linkName,
@@ -212,7 +212,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         {errors.iban && <p className="p-3 text-red-500 font-bold text-sm">IBAN non valide</p>}
                     </div>
 
-                    <div className="md:flex justify-around space-x-2">
+                    {/* <div className="md:flex justify-around space-x-2">
                         <div className="form-control w-full">
                             <label className="label">
                             <span className="text-md font-bold">Catégorie<span className="text-red-500">*</span></span>
@@ -228,7 +228,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             <input type="text" placeholder="Smartphone" className="input input-bordered" {...register("subcategory", { required: true })} />
                             {errors.subcategory && <p className="p-3 text-red-500 font-bold text-sm">Sous catégorie invalide</p>}
                         </div>
-                    </div>
+                    </div> */}
 
 
 
@@ -254,7 +254,17 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                     
                     <div className="form-control">
                         {
-                            !errors.name && !errors.price && !errors.description && !errors.images && !errors.category && !errors.subcategory ? (
+                            !errors.name 
+                            && !errors.price 
+                            && !errors.description 
+                            && !errors.images
+                            //&& !errors.category && !errors.subcategory 
+                            && !errors.quantity
+                            && !errors.currency
+                            && !errors.iban
+                            && !errors.linkName
+                            && !errors.countries                        
+                            ? (
 
                                 (
                                     !loadingSubmit ? (
