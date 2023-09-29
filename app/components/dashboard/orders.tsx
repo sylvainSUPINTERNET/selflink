@@ -106,21 +106,26 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                     "orderIds": tagged
                 }
             });
+
+            mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`) 
+            setTagged([]);
+
         } catch ( e ) {
             // TODO
+            setTagged([]);
         }
 
-        setTagged([]);
-        mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`) 
+
+
     }
 
-    const generateCellBg = (order:Order) => {
-        if ( tagged.includes(order.orderId) ) {
-            return "border-l-green-400 border-l-8";
-        } else {
-            return "border-l-0";
-        }
-    }
+    // const generateCellBg = (order:Order) => {
+    //     if ( tagged.includes(order.orderId) ) {
+    //         return "border-l-green-400 border-l-8";
+    //     } else {
+    //         return "border-l-0";
+    //     }
+    // }
     // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
     const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`, fetcher);
     
@@ -191,11 +196,11 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                 if there is a button in form, it will close the modal
                 <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form> */}
-                <h3 className="font-bold text-2xl text-center mt-3 mb-3">Demande de remboursement</h3>
+                <h3 className="font-bold text-2xl text-center mt-3 mb-5 p-3">Demande de remboursement</h3>
                 <div className=" mt-3">
                     <form method="dialog" action="">
                         <div className="flex justify-evenly py-4">
-                            <button className="btn btn-success  bg-green-600 rounded text-lg md:text-2xl text-white font-medium cursor-pointer" onClick={e=> confirmRefund(e)}>Confirmer</button>
+                            <button className="btn btn-primary rounded text-lg md:text-2xl text-white font-medium cursor-pointer" onClick={e=> confirmRefund(e)}>Confirmer</button>
                             <button className="btn btn-error  bg-red-600 rounded text-lg md:text-2xl text-white font-medium cursor-pointer">Annuler</button>
                         </div>
                     </form>
@@ -205,39 +210,86 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
             
         <div className="mt-2 p-2 mb-3">
 
+        <div className="flex justify-center mb-2 mt-5 p-2 text-2xl">
+                        {tagged.length > 0 ? 
+            <button className="btn btn-primary text-white  w-2/4" onClick={e => {
+                saveOrderStatus()
+            }}>Sauvegarder</button>
+            : 
+            <button className="btn btn-disabled text-white  w-2/4">Sauvegarder</button>
+            }
+        </div>
             
+
             {
                 paymentLinkInitUrl ? <>
-                    <div className="md:flex md:justify-between">
+                    <div className="justify-center flex mt-5">
                         <div className="">
                             {
-                                    <p className="font-medium">TOTAL {
-                                        <span className="font-bold">
-                                            {new Intl.NumberFormat('fr-FR', {
-                                                style: 'currency',
-                                                currency: 'EUR',
-                                            }).format(amountEstimate)}
-                                        </span>
-                                        }</p>
+                                    // <p className="font-medium">TOTAL {
+                                    //     <span className="font-bold">
+                                    //         {new Intl.NumberFormat('fr-FR', {
+                                    //             style: 'currency',
+                                    //             currency: 'EUR',
+                                    //         }).format(amountEstimate)}
+                                    //     </span>
+                                    //     }</p>
+
+                                        <>
+                                            <span className="bg-gray-100 text-gray-800 text-md font-medium inline-flex items-center px-2.5 py-1.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-200">
+                                                <svg className="w-2.5 h-2.5 mr-1.5"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill="currentColor" d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"/>
+                                                    <path fill="#fff" d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"/>
+                                                </svg>
+                                                <span className="">
+                                                    Total des ventes 
+                                                </span>
+                                                {
+                                                    <span className="font-bold ml-2">
+                                                        {new Intl.NumberFormat('fr-FR', {
+                                                            style: 'currency',
+                                                            currency: 'EUR',
+                                                        }).format(amountEstimate)}
+                                                    </span>
+                                                    }
+                                            </span>
+                                        </>
                             }
                         </div>
 
                         <div>
+         
                             {
                                 stock > 0 ?
-                                    <p className="font-medium">Stock produit <span className="font-bold">{ stock }</span></p>
+                                    <>
+                                        <span className="bg-gray-100 text-gray-800 text-md font-medium inline-flex items-center px-2.5 py-1.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-200">
+                                            <svg className="w-2.5 h-2.5 mr-1.5"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill="currentColor" d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"/>
+                                                <path fill="#fff" d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"/>
+                                            </svg>
+                                            { stock } produit{stock > 1 ? "s" : ""} disponible{stock > 1 ? "s" : ""}
+                                        </span>
+                                    </>
                                 :
-                                    <p className="font-medium">Stock produit épuisé <span className="font-bold">{ stock }</span></p>
+                                    <>
+                                        <span className="bg-gray-100 text-gray-800 text-md font-medium inline-flex items-center px-2.5 py-1.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-200">
+                                            <svg className="w-2.5 h-2.5 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                                            </svg>
+                                            Rupture de stock
+                                        </span>
+                                    </>
                             }
+
                         </div>
                     </div>
-
                  </>
                 : 
-                <p></p>
+                <></>
             }
+        </div>
 
-            <div className="flex justify-center mt-2 mb-2">
+        <div className="flex justify-center mt-2 mb-2">
                     {
                         stock > 0 ?
                         <a className="btn btn-primary text-white" target="blank" href={paymentLinkInitUrl}>
@@ -253,20 +305,23 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                     
                     }
             </div>
-        </div>
 
             
             {
                 orderCount ? 
                     <>
 
-                    <div className="flex justify-start mb-5">
-                        <p className="font-medium">Commandes total <span className="font-bold">{ orderCount }</span></p>
+                    <div className="flex justify-end">
+                        <span className="mb-3 bg-gray-100 text-gray-800 text-md font-medium inline-flex items-center px-2.5 py-1.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400">
+                            <svg className="w-2.5 h-2.5 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                            </svg>
+                            Commandes total { orderCount }
+                        </span>
                     </div>
-                    
 
 
-                    <div className="overflow-x-auto h-[32em]">
+                    <div className="overflow-x-auto h-[32em] lg:h-[22em]">
                         <table className="table table-xs">
 
                             <thead>
@@ -284,9 +339,9 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                 {
                                     (data as unknown as any).response.data.map((order:Order, index:number) => {
                                         return (<>
-                                            <tr key={index} className={generateCellBg(order)}>
-                                                <td>{order.productname}</td>
-                                                <td>
+                                            <tr key={index} className={"text-center border-b border-gray-200"}>
+                                                <td className="text-center">{order.productname}</td>
+                                                <td className="text-center">
                                                     {
                                                         order.refund === true ? <div>
                                                            <button className="btn btn-disabled" >Rembourser</button>
@@ -297,13 +352,13 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                                         </>
                                                     }   
                                                 </td>
-                                                <td>
-                                                    <div className="text-left">
+                                                <td className="text-center">
+                                                    <div>
                                                         <p className="mb-3">n° <span className="font-bold">{order.orderId}</span></p>
                                                         <p><span className="font-bold">{new Date(order.createdAt).toLocaleString('fr-FR')}</span></p>
                                                     </div>
                                                 </td>
-                                                <td>{order.quantity} x {(order.amount / 100).toFixed(2)} {order.currency.toUpperCase()}</td>
+                                                <td className="text-center">{order.quantity} x {(order.amount / 100).toFixed(2)} {order.currency.toUpperCase()}</td>
                                                 <td>
                                                     <div className="text-left">
                                                         <p>Pays: <span className="font-bold">{order.shippingCountry}</span></p>
@@ -337,22 +392,18 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                                                         <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg" onClick={e=>{
                                                                             changeOrderStatus(e, order)
                                                                         }}>
-                                                                            { tagged.includes(order.orderId) ? "Envoyé" : "Attente" }
+                                                                            { tagged.includes(order.orderId) ? "Expédié" : "Attente" }
                                                                         </div>
                                                                     : 
                                                                         <div className="cursor-pointer p-2 text-center rounded-lg btn btn-primary shadow-lg"  onClick={e=>{
                                                                             changeOrderStatus(e, order)
                                                                         }}>
-                                                                            { tagged.includes(order.orderId) ? "Attente" : "Envoyé" }
+                                                                            { tagged.includes(order.orderId) ? "Attente" : "Expédié" }
                                                                         </div>
                                                                 }
                                                             
                                                             </>
                                                         }
-
-                                                        
-
-
 
                                                     </div>
 
@@ -378,15 +429,6 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                             />
                         </div>
 
-                    <div className="flex justify-end mb-2">
-                        {tagged.length > 0 ? 
-                        <button className="btn btn-primary text-white" onClick={e => {
-                            saveOrderStatus()
-                        }}>Sauvegarder</button>
-                        : 
-                        <button className="btn btn-disabled text-white">Sauvegarder</button>
-                        }
-                    </div>
 
                     </>
 

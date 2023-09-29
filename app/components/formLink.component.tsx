@@ -117,14 +117,14 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
 
                 <form className="p-4 space-y-4" onSubmit={handleSubmit(onSubmitNewLink)}>
                     
-                    <div className="md:flex justify-around space-x-2">
+                    <div className="md:flex md:justify-around md:space-x-2">
                         <div className="form-control w-full">
                             <label className="label">
                             <span className="text-md font-bold">Nom du produit<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="Nom de produit" className="input input-bordered font-bold" {...register("name", { required: true, maxLength:100, minLength:1 })}/>
+                            <input type="text" placeholder="Nom de produit" className="input input-bordered font-bold" {...register("name", { required: true, maxLength:30, minLength:1 })}/>
                             <div className="p-2">
-                                {errors.name && <p className=" text-red-500 font-bold text-sm">Nom de produit non valide</p>}
+                                {errors.name && <p className=" text-red-500 font-bold text-sm">Nom de produit non valide, le nom doit être entre 1 et 30 caractères</p>}
                             </div>
                         </div>
 
@@ -136,40 +136,46 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             {errors.linkName && <p className="p-3 text-red-500 font-bold text-sm">Nom du lien invalide</p>}
                         </div>
                     </div>
+                    
 
-
-
+                    <div>
                         <Controller
-                        name="countries"
-                        control={control}
-                        rules={{ required: "Ce champ est requis." }}
-                        defaultValue={[
-                            {
-                                label: 'FR',
-                                value: 'FR'
-                            }
-                        ]}
-                            render={({ field, fieldState }) => (
-                                <div>
-                                    <Select
-                                        {...field}
-                                        options={options}
-                                        isMulti
-                                        closeMenuOnSelect={false}
-                                        components={animatedComponents}
-                                        noOptionsMessage={() => 'Aucune option'}
-                                        openMenuOnClick={true}
-                                        isSearchable={true}
-                                    />
-                                    {fieldState.invalid && <p className="p-3 text-red-500 font-bold text-sm">{fieldState.error?.message}</p>}
-                                </div>
-      
-                                )}
-                            />
+                            name="countries"
+                            control={control}
+                            rules={{ required: "Ce champ est requis." }}
+                            defaultValue={[
+                                {
+                                    label: 'FR',
+                                    value: 'FR'
+                                }
+                            ]}
+                                render={({ field, fieldState }) => (
+                                    
+                                    <div className="">
 
+                                        <label className="label">
+                                            <span className="text-md font-bold">Pays éligible pour livraison<span className="text-red-500">*</span></span>
+                                        </label>
+                                    
+                                        <Select
+                                            {...field}
+                                            options={options}
+                                            isMulti
+                                            closeMenuOnSelect={false}
+                                            components={animatedComponents}
+                                            noOptionsMessage={() => 'Aucune option'}
+                                            openMenuOnClick={true}
+                                            isSearchable={true}
+                                        />
+                                        {fieldState.invalid && <p className="p-3 text-red-500 font-bold text-sm">{fieldState.error?.message}</p>}
+                                    </div>
+        
+                                    )}
+                                />
+                    </div>
   
                     
-                    <div className="md:flex justify-around space-x-2">
+                    <div className="md:flex md:justify-around md:space-x-2">
                         <div className="form-control w-full">
                             <label className="label">
                             <span className="text-md font-bold">Prix unitaire<span className="text-red-500">*</span></span>
@@ -234,10 +240,10 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
 
                     <div className="form-control">
                         <label className="label">
-                        <span className="text-md font-bold">Description du produit<span className="text-red-500">*</span></span>
+                        <span className="text-md font-bold">Description du produit<span className="text-red-500"></span></span>
                         </label>
-                        <textarea placeholder="A sample product description" className="textarea textarea-bordered h-24" {...register("description", { required: true })}></textarea>
-                        {errors.description && <p className="p-3 text-red-500 font-bold text-sm">Description du produit non valide</p>}
+                        <textarea placeholder="A sample product description" className="textarea textarea-bordered h-24" {...register("description", { required: true, maxLength:155 })}></textarea>
+                        {errors.description && <p className="p-3 text-red-500 font-bold text-sm">Description du produit non valide, 155 caractères maximum</p>}
                     </div>
 
                     <div className="form-control">
@@ -246,7 +252,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         </label>
                         <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("images", { required: true , validate:isValidURL})} />
                         <div className="mt-2 text-md">
-                            <p>Pas d'image pour le moment ? héberger votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a></p>
+                            <p className="text-sm">Pas d'image pour le moment ? <span className="font-bold">télécharger</span> votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a> et <span className="font-bold">copier/coller</span> votre <span className="font-bold">Direct link</span> généré ici</p>
                         </div>
                         {errors.images && <p className="p-3 text-red-500 font-bold text-sm">URL invalide</p>}
                     </div>
@@ -256,7 +262,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         {
                             !errors.name 
                             && !errors.price 
-                            && !errors.description 
+                            // && !errors.description 
                             && !errors.images
                             //&& !errors.category && !errors.subcategory 
                             && !errors.quantity
@@ -266,21 +272,28 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                             && !errors.countries                        
                             ? (
 
+                                
                                 (
                                     !loadingSubmit ? (
-                                        <button type="submit" className="btn btn-primary">
-                                            Générer
-                                        </button>
+                                        <div className="flex justify-center mt-4 p-2">
+                                            <button type="submit" className="btn btn-primary w-2/4">
+                                                Générer
+                                            </button>
+                                        </div>
+
                                     ) : (
-                                        <button type="submit" className="btn btn-primary  cursor-not-allowed" disabled>
-                                            <span className="loading loading-spinner loading-md">
-                                            </span>
-                                        </button>
+                                        <div className="flex justify-center mt-4 p-2">
+                                            <button type="submit" className="btn btn-primary  cursor-not-allowed w-2/4" disabled>
+                                                <span className="loading loading-spinner loading-md">
+                                                </span>
+                                                Générer
+                                            </button>
+                                        </div>
                                     )
                                 )
 
                             ) : (
-                                <button type="submit" className="btn btn-primary cursor-not-allowed" disabled>Générer</button>
+                                <button type="submit" className="btn btn-primary cursor-not-allowed w-2/4" disabled>Générer</button>
                             )
                         }
                     </div>

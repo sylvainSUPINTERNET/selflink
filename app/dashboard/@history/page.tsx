@@ -6,7 +6,7 @@ const LazyComponent = lazy(() => {
     return new Promise(resolve => {
         setTimeout(() => {
             return resolve(import('../../components/history.component') as any);
-        }, 2000);
+        }, 200);
     });
 });
 

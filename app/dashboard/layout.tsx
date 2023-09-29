@@ -13,10 +13,10 @@ export default function TestLayout({
     
     return (
       // <AuthGuard>
-      <div className="bg-slate-100 h-screen">
+      <div className="bg-white h-screen">
           <section>
             {/* Include shared UI here e.g. a header or sidebar */}
-            <nav className="mb-5">
+            <nav className="mb-0 md:mb-5 ">
               <div className="navbar bg-base-100 ">
                 <div className="flex-1">
                   <a className="btn btn-ghost normal-case text-xl">Dashboard</a>
@@ -44,12 +44,13 @@ export default function TestLayout({
             </nav>
           </section>
 
-          <div className="flex flex-col md:flex-row justify-center container mx-auto mt-10 md:space-x-2 space-y-2 md:space-y-0">
-              <div className="bg-base-100 w-full p-6 rounded-xl shadow-lg">
-                {linkform}
-              </div>
-              <div className="bg-base-100 w-full p-6 rounded-xl shadow-lg">
+          {/* <div className="flex flex-col md:flex-row justify-center container mx-auto mt-10 md:space-x-2 space-y-2 md:space-y-0"> */}
+          <div className="lg:flex lg:flex-row lg:space-x-0 lg:p-0 h-4/4 ">
+              <div className="bg-base-100 w-full p-6  lg:rounded-none flex-grow">
                 {children}
+              </div>
+              <div className="bg-base-100 w-full p-6  lg:rounded-none  flex-grow">
+                {linkform}
               </div>
           </div>
 

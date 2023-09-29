@@ -6,7 +6,7 @@ const LazyComponent = lazy(() => {
     return new Promise(resolve => {
         setTimeout(() => {
             return resolve(import('../../components/formLink.component') as any);
-        }, 2000);
+        }, 1000);
     });
 });
 

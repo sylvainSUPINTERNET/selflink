@@ -9,7 +9,7 @@ const LazyGetStartedComponent = lazy(() => {
     return new Promise(resolve => {
         setTimeout(() => {
             return resolve(import('../components/order.component') as any);
-        }, 2000);
+        }, 1000);
     });
 });
 
