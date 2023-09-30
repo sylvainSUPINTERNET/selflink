@@ -293,7 +293,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                                 )
 
                             ) : (
-                                <button type="submit" className="btn btn-primary cursor-not-allowed w-2/4" disabled>Générer</button>
+                                <div className="flex justify-center mt-4 p-2">
+                                    <button type="submit" className="btn btn-primary cursor-not-allowed w-2/4" disabled>Générer</button>
+                                </div>
                             )
                         }
                     </div>

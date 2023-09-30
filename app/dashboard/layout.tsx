@@ -12,7 +12,7 @@ export default function TestLayout({
   }) {
     
     return (
-      // <AuthGuard>
+      //<AuthGuard>
       <div className="bg-white h-screen">
           <section>
             {/* Include shared UI here e.g. a header or sidebar */}
@@ -55,6 +55,6 @@ export default function TestLayout({
           </div>
 
       </div>
-      // </AuthGuard>
+      //</AuthGuard>
     )
   }
