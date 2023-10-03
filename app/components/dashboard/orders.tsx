@@ -210,7 +210,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
             
         <div className="mt-2 p-2 mb-3">
 
-        <div className="flex justify-center mb-2 mt-5 p-2 text-2xl">
+        <div className="flex justify-center  p-0.5 text-2xl">
                         {tagged.length > 0 ? 
             <button className="btn btn-primary text-white  w-2/4" onClick={e => {
                 saveOrderStatus()
@@ -221,75 +221,10 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
         </div>
             
 
-            {
-                paymentLinkInitUrl ? <>
-                    <div className="justify-center flex mt-5">
-                        <div className="">
-                            {
-                                    // <p className="font-medium">TOTAL {
-                                    //     <span className="font-bold">
-                                    //         {new Intl.NumberFormat('fr-FR', {
-                                    //             style: 'currency',
-                                    //             currency: 'EUR',
-                                    //         }).format(amountEstimate)}
-                                    //     </span>
-                                    //     }</p>
-
-                                        <>
-                                            <span className="bg-gray-100 text-gray-800 text-md font-medium inline-flex items-center px-2.5 py-1.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-200">
-                                                <svg className="w-2.5 h-2.5 mr-1.5"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill="currentColor" d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"/>
-                                                    <path fill="#fff" d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"/>
-                                                </svg>
-                                                <span className="">
-                                                    Total des ventes 
-                                                </span>
-                                                {
-                                                    <span className="font-bold ml-2">
-                                                        {new Intl.NumberFormat('fr-FR', {
-                                                            style: 'currency',
-                                                            currency: 'EUR',
-                                                        }).format(amountEstimate)}
-                                                    </span>
-                                                    }
-                                            </span>
-                                        </>
-                            }
-                        </div>
-
-                        <div>
-         
-                            {
-                                stock > 0 ?
-                                    <>
-                                        <span className="bg-gray-100 text-gray-800 text-md font-medium inline-flex items-center px-2.5 py-1.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-200">
-                                            <svg className="w-2.5 h-2.5 mr-1.5"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill="currentColor" d="m18.774 8.245-.892-.893a1.5 1.5 0 0 1-.437-1.052V5.036a2.484 2.484 0 0 0-2.48-2.48H13.7a1.5 1.5 0 0 1-1.052-.438l-.893-.892a2.484 2.484 0 0 0-3.51 0l-.893.892a1.5 1.5 0 0 1-1.052.437H5.036a2.484 2.484 0 0 0-2.48 2.481V6.3a1.5 1.5 0 0 1-.438 1.052l-.892.893a2.484 2.484 0 0 0 0 3.51l.892.893a1.5 1.5 0 0 1 .437 1.052v1.264a2.484 2.484 0 0 0 2.481 2.481H6.3a1.5 1.5 0 0 1 1.052.437l.893.892a2.484 2.484 0 0 0 3.51 0l.893-.892a1.5 1.5 0 0 1 1.052-.437h1.264a2.484 2.484 0 0 0 2.481-2.48V13.7a1.5 1.5 0 0 1 .437-1.052l.892-.893a2.484 2.484 0 0 0 0-3.51Z"/>
-                                                <path fill="#fff" d="M8 13a1 1 0 0 1-.707-.293l-2-2a1 1 0 1 1 1.414-1.414l1.42 1.42 5.318-3.545a1 1 0 0 1 1.11 1.664l-6 4A1 1 0 0 1 8 13Z"/>
-                                            </svg>
-                                            { stock } produit{stock > 1 ? "s" : ""} disponible{stock > 1 ? "s" : ""}
-                                        </span>
-                                    </>
-                                :
-                                    <>
-                                        <span className="bg-gray-100 text-gray-800 text-md font-medium inline-flex items-center px-2.5 py-1.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-200">
-                                            <svg className="w-2.5 h-2.5 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                                            </svg>
-                                            Rupture de stock
-                                        </span>
-                                    </>
-                            }
-
-                        </div>
-                    </div>
-                 </>
-                : 
-                <></>
-            }
+            
         </div>
 
-        <div className="flex justify-center mt-2 mb-2">
+        <div className="flex justify-center  mb-4">
                     {
                         stock > 0 ?
                         <a className="btn btn-primary text-white" target="blank" href={paymentLinkInitUrl}>
@@ -304,8 +239,52 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                     
                     
                     }
-            </div>
+        </div>
 
+        {
+                paymentLinkInitUrl ? <>
+                    <div className="justify-center flex space-x-3 mb-5 md:mb-0">
+                        <div className="">
+                            {
+                                    // <p className="font-medium">TOTAL {
+                                    //     <span className="font-bold">
+                                    //         {new Intl.NumberFormat('fr-FR', {
+                                    //             style: 'currency',
+                                    //             currency: 'EUR',
+                                    //         }).format(amountEstimate)}
+                                    //     </span>
+                                    //     }</p>
+
+                                        <>
+                                            <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10"> <span className="font-bold mr-0.5">TOTAL </span> {new Intl.NumberFormat('fr-FR', {
+                                                            style: 'currency',
+                                                            currency: 'EUR',
+                                                        }).format(amountEstimate)}</span>
+                                        </>
+                            }
+                        </div>
+
+                        <div>
+         
+                            {
+                                stock > 0 ?
+                                    <>
+                                        <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10"> <span className="font-bold mr-0.5">STOCK </span>{ stock } produit{stock > 1 ? "s" : ""} disponible{stock > 1 ? "s" : ""}</span>
+                                    </>
+                                :
+                                    <>
+                                        <span className="inline-flex items-center rounded-md bg-pink-50 px-2 py-1 text-xs font-medium text-pink-700 ring-1 ring-inset ring-pink-700/10">
+                                            <span className="font-bold mr-0.5">Rupture de stock</span>
+                                        </span>
+                                    </>
+                            }
+
+                        </div>
+                    </div>
+                 </>
+                : 
+                <></>
+            }
             
             {
                 orderCount ? 
@@ -318,6 +297,8 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                             </svg>
                             Commandes total { orderCount }
                         </span>
+
+
                     </div>
 
 
@@ -417,7 +398,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                     </div>
 
                                                 
-                        <div className="mt-5">
+                        <div className="p-0.3">
                             <ResponsivePagination
                             total={Math.ceil(orderCount / size) }
                             previousLabel="‹" nextLabel="›"

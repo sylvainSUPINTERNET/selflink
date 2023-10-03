@@ -37,7 +37,8 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
     }
 
     const onSubmitNewLink = ( data :any ) => {
-        
+        const currency = "EUR";
+
         setLoadingSubmit(true);
 
         setTimeout( async () => {
@@ -52,7 +53,7 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                         "name": data.name,
                         "price": data.price,
                         "quantity": data.quantity,
-                        "currency": "EUR",
+                        "currency": currency,
                         "iban": data.iban,
                         // "category": data.category,
                         // "subcategory": data.subcategory,
@@ -113,27 +114,29 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                 theme="light"
                 />
 
-                <h1 className="p-3 rounded-lg text-2xl font-bold mb-1">Générer un lien de paiement</h1>
+                <h1 className="p-0.5 rounded-lg text-2xl font-bold">Générer un lien de paiement</h1>
 
-                <form className="p-4 space-y-4" onSubmit={handleSubmit(onSubmitNewLink)}>
+                <form className="p-4" onSubmit={handleSubmit(onSubmitNewLink)}>
                     
                     <div className="md:flex md:justify-around md:space-x-2">
                         <div className="form-control w-full">
                             <label className="label">
-                            <span className="text-md font-bold">Nom du produit<span className="text-red-500">*</span></span>
+                            <span className="text-sm font-bold">Nom du produit<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="Nom de produit" className="input input-bordered font-bold" {...register("name", { required: true, maxLength:30, minLength:1 })}/>
-                            <div className="p-2">
-                                {errors.name && <p className=" text-red-500 font-bold text-sm">Nom de produit non valide, le nom doit être entre 1 et 30 caractères</p>}
+                            <input type="text" placeholder="Nom de produit" className="text-sm input input-bordered font-bold h-8" {...register("name", { required: true, maxLength:30, minLength:1 })}/>
+                            <div className="p-0.5 min-h-[2.2em] ">
+                                {errors.name && <p className=" text-red-500 font-bold text-sm">Valeur doit être en 1 et 30 caractères</p>}
                             </div>
                         </div>
 
                         <div className="form-control w-full">
                             <label className="label">
-                            <span className="text-md font-bold">Nom du lien<span className="text-red-500">*</span></span>
+                            <span className="text-sm font-bold">Nom du lien<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="Nom du lien" className="input input-bordered" {...register("linkName", { required: true, maxLength:100, minLength:1 })} />
-                            {errors.linkName && <p className="p-3 text-red-500 font-bold text-sm">Nom du lien invalide</p>}
+                            <input type="text" placeholder="Nom du lien" className="input input-bordered h-8" {...register("linkName", { required: true, maxLength:100, minLength:1 })} />
+                            <div className="p-0.5 min-h-[2.2em]">
+                                {errors.linkName && <p className="text-red-500 font-bold text-sm">Valeur doit être en 1 et 100 caractères</p>}
+                            </div>
                         </div>
                     </div>
                     
@@ -153,13 +156,14 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                                     
                                     <div className="">
 
-                                        <label className="label">
+                                        <label className="label text-sm">
                                             <span className="text-md font-bold">Pays éligible pour livraison<span className="text-red-500">*</span></span>
                                         </label>
                                     
                                         <Select
                                             {...field}
                                             options={options}
+                                            className="h-8"
                                             isMulti
                                             closeMenuOnSelect={false}
                                             components={animatedComponents}
@@ -167,7 +171,9 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                                             openMenuOnClick={true}
                                             isSearchable={true}
                                         />
-                                        {fieldState.invalid && <p className="p-3 text-red-500 font-bold text-sm">{fieldState.error?.message}</p>}
+                                        <div className="p-0.5 min-h-[2.2em]">
+                                            {fieldState.invalid && <p className="p-3 text-red-500 font-bold text-sm">{fieldState.error?.message}</p>}
+                                        </div>
                                     </div>
         
                                     )}
@@ -178,44 +184,46 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                     <div className="md:flex md:justify-around md:space-x-2">
                         <div className="form-control w-full">
                             <label className="label">
-                            <span className="text-md font-bold">Prix unitaire<span className="text-red-500">*</span></span>
+                            <span className="text-sm font-bold">Prix unitaire<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="number" placeholder="2" className="input input-bordered font-bold" {...register("price", { required: true, min:2 })}/>
-                            <div className="p-2">
+                            <input type="number" placeholder="2" className="input input-bordered font-bold h-8" {...register("price", { required: true, min:2 })}/>
+                            <div className="p-0.5 min-h-[2.2em]">
                                 {errors.price && <p className=" text-red-500 font-bold text-sm">Prix invalide, 2 minimum</p>}
                             </div>
                         </div>
 
                         <div className="form-control w-full">
                             <label className="label">
-                            <span className="text-md font-bold">Quantité stock<span className="text-red-500">*</span></span>
+                            <span className="text-sm font-bold">Quantité stock<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="number" placeholder="2" className="input input-bordered font-bold" {...register("quantity", { required: true, min:1 })}/>
-                            <div className="p-2">
+                            <input type="number" placeholder="2" className="input input-bordered font-bold h-8" {...register("quantity", { required: true, min:1 })}/>
+                            <div className="p-0.5 min-h-[2.2em]">
                                 {errors.quantity && <p className=" text-red-500 font-bold text-sm">Quantité invalide, minimum 1</p>}
                             </div>
                         </div>
 
                         <div className="form-control w-full">
                             <label className="label">
-                            <span className="text-md font-bold">Devise<span className="text-red-500">*</span></span>
+                            <span className="text-sm font-bold">Devise<span className="text-red-500">*</span></span>
                             </label>
-                            <select className="select select-bordered w-full" {...register("currency", { required: true })}>
-                                <option>EUR</option>
-                            </select>
-                            <div className="p-2">
-                                {errors.currency && <p className="text-red-500 font-bold text-sm">Devise non valide</p>}
+                            <input  value="EUR" {...register("currency")} type="text" id="disabled-input" aria-label="disabled input" className="h-8  bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" disabled>
+                            </input>
+                            <div className="p-0.5 min-h-[2.2em]">
+                            {errors.currency && <p className="text-red-500 font-bold text-sm">Devise non valide</p>}
                             </div>
                         </div>
+
                     </div>
 
 
                     <div className="form-control">
                         <label className="label">
-                        <span className="text-md font-bold">IBAN<span className="text-red-500">*</span></span>
+                        <span className="text-sm font-bold">IBAN<span className="text-red-500">*</span></span>
                         </label>
-                        <input type="text" placeholder="IBAN" className="input input-bordered font-bold" {...register("iban", { required: true, validate: ibanValidation })}/>
-                        {errors.iban && <p className="p-3 text-red-500 font-bold text-sm">IBAN non valide</p>}
+                        <input type="text" placeholder="IBAN" className="input input-bordered font-bold h-8" {...register("iban", { required: true, validate: ibanValidation })}/>
+                        <div className="p-0.5 min-h-[2.2em]">
+                            {errors.iban && <p className=" text-red-500 font-bold text-sm">IBAN non valide</p>}
+                        </div>
                     </div>
 
                     {/* <div className="md:flex justify-around space-x-2">
@@ -240,21 +248,25 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
 
                     <div className="form-control">
                         <label className="label">
-                        <span className="text-md font-bold">Description du produit<span className="text-red-500"></span></span>
+                        <span className="text-sm font-bold">Description du produit<span className="text-red-500"></span></span>
                         </label>
-                        <textarea placeholder="A sample product description" className="textarea textarea-bordered h-24" {...register("description", { required: true, maxLength:155 })}></textarea>
-                        {errors.description && <p className="p-3 text-red-500 font-bold text-sm">Description du produit non valide, 155 caractères maximum</p>}
+                        <textarea placeholder="A sample product description" className="textarea textarea-bordered text-sm h-10" {...register("description", { required: true, maxLength:155 })}></textarea>
+                        <div className="p-0.5 min-h-[2.2em]">
+                            {errors.description && <p className="text-red-500 font-bold text-sm">Description du produit non valide, 155 caractères maximum</p>}
+                        </div>
                     </div>
 
                     <div className="form-control">
                         <label className="label">
-                        <span className="text-md font-bold">Image du produit<span className="text-red-500">*</span></span>
+                        <span className="text-sm font-bold">Image du produit<span className="text-red-500">*</span></span>
                         </label>
                         <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("images", { required: true , validate:isValidURL})} />
-                        <div className="mt-2 text-md">
-                            <p className="text-sm">Pas d'image pour le moment ? <span className="font-bold">télécharger</span> votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a> et <span className="font-bold">copier/coller</span> votre <span className="font-bold">Direct link</span> généré ici</p>
+                        <div className="mt-2 text-sm">
+                            <p>Pas d'image pour le moment ? <span className="font-bold">télécharger</span> votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a> et <span className="font-bold">copier/coller</span> votre <span className="font-bold">Direct link</span> généré ici</p>
                         </div>
-                        {errors.images && <p className="p-3 text-red-500 font-bold text-sm">URL invalide</p>}
+                        <div className="p-0.5 min-h-[2.2em]">
+                            {errors.images && <p className="text-red-500 font-bold text-sm">URL invalide</p>}
+                        </div>
                     </div>
 
                     
