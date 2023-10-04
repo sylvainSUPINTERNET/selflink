@@ -5,7 +5,7 @@ import GitHub from "next-auth/providers/github"
 
 
 export const authOptions:NextAuthOptions = {
-    debug: true,
+    debug: process.env.ENV === "dev" ? true: false,
     providers: [
         GitHub({
             clientId: process.env.GITHUB_ID as string,
