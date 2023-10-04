@@ -13,12 +13,12 @@ export default function Home() {
 
   const { data: session, status } = useSession();
 
-  // if (session) {
-  //   console.log("logged");
-  //   console.log(session.user); // You'll have user.name, user.email, etc. based on your profile() method.
-  // } else {
-  //   console.log("not logged");
-  // }
+  if (session) {
+    console.log("logged");
+    console.log(session.user); // You'll have user.name, user.email, etc. based on your profile() method.
+  } else {
+    console.log("not logged");
+  }
 
 
   // // this is working
