@@ -12,7 +12,6 @@ export const authOptions:NextAuthOptions = {
             clientSecret: process.env.GITHUB_SECRET as string,
             authorization: { params: { scope: "email" } }, //openid is required for Google ( OIDC providers )
             profile: (profile) => {
-                console.log("profile", profile)
                 return {
                     id: profile.id,
                     name: profile.name,
@@ -36,11 +35,15 @@ export const authOptions:NextAuthOptions = {
             }
         },
           async redirect({ url, baseUrl }) {
-            // Allows relative callback URLs
-            if (url.startsWith("/")) return `${baseUrl}${url}`
-            // Allows callback URLs on the same origin
-            else if (new URL(url).origin === baseUrl) return url
-            return baseUrl
+
+            // // Allows relative callback URLs
+            // if (url.startsWith("/")) return `${baseUrl}${url}`
+
+            // // Allows callback URLs on the same origin
+            // else if (new URL(url).origin === baseUrl) return url
+            // return baseUrl
+
+            return `${baseUrl}/dashboard`;
           },
           async session({ session, token, user }) {
             // Send properties to the client, like an access_token and user id from a provider.
