@@ -127,7 +127,9 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
     //     }
     // }
     // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
-    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`, fetcher);
+    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`, fetcher, {
+        revalidateOnFocus: false
+    });
     
     useEffect( () => {
         console.log("order list eff", paymentLinkInit)
