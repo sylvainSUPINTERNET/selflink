@@ -14,9 +14,6 @@ import axios from "axios";
 
 export default function OrdersComponent() {
 
-
-    // TODO quand on change de lien de paiement, il faut fetch les nouvelles commandes
-
     const [paymentLinkInit, setPaymentLinkInit] = useState<string>();
     const [paymentLinkInitUrl, setPaymentLinkInitUrl] = useState<string>();
 
@@ -29,9 +26,6 @@ export default function OrdersComponent() {
     }
 
     useEffect ( () => {
-
-        console.log("EFFECT parent order compo");
-
     }, [paymentLinkInit, paymentLinkInitUrl, offset]);
 
 

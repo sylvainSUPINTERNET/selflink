@@ -1,17 +1,18 @@
 "use client";
 
 import { Session } from "next-auth";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import  { useForm, Controller }  from  "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { useSession } from "next-auth/react";
 
 let ibantools = require("ibantools")
 const animatedComponents = makeAnimated();
 
-export default function FormLinkComponent(props: {sessionData: Session}) {
+export default function FormLinkComponent(props:any) {
 
     const { register, handleSubmit, formState:{errors}, reset, control } = useForm();
 
@@ -85,8 +86,8 @@ export default function FormLinkComponent(props: {sessionData: Session}) {
                 }
     
             } catch ( e ) {
-                // TODO handle error
                 setLoadingSubmit(false);
+                alert("Erreur lors de la création du lien de paiement")
             }
 
         },2000)

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useSWR, {mutate} from "swr";
 import ResponsivePagination from 'react-responsive-pagination';
 import "./order.css"
+import { useSession } from "next-auth/react";
 
 // TODO : use real paymentLink + verif token
 const fetcher = (url:string) => {
@@ -43,6 +44,7 @@ type Order = {
 
 export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffset}:{paymentLinkInit:string | undefined, paymentLinkInitUrl: string|undefined, offset:any, setOffset:any}) => {
 
+    let [userData, setUserData] = useState<any>();
     let [stock, setStock] = useState<number>(0);
     let [size, setSize] = useState<number>(20);
     let [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +52,9 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
     let [amountEstimate, setAmountEstimate] = useState<number>(0);
     let [orderToRefund, setOrderToRefund] = useState<Order|null>(null);
     let [tagged, setTagged] = useState<Array<any>>([]);
+
+    let [btnRefundClicked, setBtnRefundClicked] = useState<number | null>(null);
+    let [loadingRefundBtn, setLoadingRefundBtn] = useState<boolean>(false);
     
     const changeOrderStatus = (ev:any, order:Order) => {
 
@@ -61,6 +66,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
     }
 
     const refund = async ( ev:any, order:Order ) => {
+        setBtnRefundClicked(order.orderId);
 
         if ( document != null) {
             if ( document.getElementById('my_modal_3') != null && order.refund === false) {
@@ -71,7 +77,8 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
     }
 
     const confirmRefund = async (ev:any) => {
-
+        setLoadingRefundBtn(true);
+    
         if ( orderToRefund != null ) {
             try {
                 const {data} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/refund`, {
@@ -84,14 +91,16 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                     }
                 });
     
-                mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`);
-    
-            } catch ( e ) {
-                // TODO
-                
+                await mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`);
+                setLoadingRefundBtn(false)
+                setBtnRefundClicked(null);
+            } catch ( e ) {                
                 alert("Erreur est survenue")
+                setLoadingRefundBtn(false);
+                setBtnRefundClicked(null);
             }
         }
+
 
     }
 
@@ -107,11 +116,11 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                 }
             });
 
-            mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`) 
+            await mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`) 
             setTagged([]);
 
         } catch ( e ) {
-            // TODO
+            alert("Une erreur est survenue")
             setTagged([]);
         }
 
@@ -126,40 +135,46 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
     //         return "border-l-0";
     //     }
     // }
-    // TODO => don't use paymentLink like this ! because any one can do it ! use token instead
+    // TODO => don't use paymentLink like this ! because any one can do it ! use token instead to check
     const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/orders?paymentLink=${paymentLinkInit}&offset=${offset}&size=${size}`, fetcher, {
         revalidateOnFocus: false
     });
     
+    
+    const { data: session, status } = useSession();
+
     useEffect( () => {
-        console.log("order list eff", paymentLinkInit)
-        console.log("Inside useEffect currentPage:", currentPage);
-        const fetchData = async () => {
-            if ( !paymentLinkInit ) return;
-            const {data} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/products/identifier`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: {
-                    "identifier": paymentLinkInit
-                }
-            })
 
-            const {data:orderCountData} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${paymentLinkInit}`);
-            console.log("ORDER COUNT");
-            setOrderCount(parseInt(orderCountData.response.data));
-
-            const {data:estimateAmountData} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/total?paymentLink=${paymentLinkInit}`);
-            setAmountEstimate(parseInt(estimateAmountData.response.data))
-            console.log("ESTIMATE AMOUNT");
+        if (session && status === 'authenticated') {
             
-            if ( data.response) {
-                setStock(data.response.data.stock)
+            setUserData(session.user)
+            
+            const fetchData = async () => {
+                if ( !paymentLinkInit ) return;
+                const {data} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/products/identifier`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: {
+                        "identifier": paymentLinkInit
+                    }
+                })
+
+                const {data:orderCountData} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/count?paymentLink=${paymentLinkInit}`);
+                setOrderCount(parseInt(orderCountData.response.data));
+
+                const {data:estimateAmountData} = await axios(`${process.env.NEXT_PUBLIC_API_URL as string}/orders/total?paymentLink=${paymentLinkInit}`);
+                setAmountEstimate(parseInt(estimateAmountData.response.data))
+                
+                if ( data.response) {
+                    setStock(data.response.data.stock)
+                }
             }
+            fetchData()
         }
-        fetchData()
-    }, [paymentLinkInit, currentPage, stock, orderCount, amountEstimate])
+
+    }, [paymentLinkInit, currentPage, stock, orderCount, amountEstimate, status])
 
     if (error) return <div>
         <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -327,11 +342,18 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                                                 <td className="text-center">
                                                     {
                                                         order.refund === true ? <div>
-                                                           <button className="btn btn-disabled" >Rembourser</button>
+                                                           <button className="btn btn-disabled">Rembourser</button>
                                                         </div>
                                                         :
                                                         <>
-                                                            <button className="btn btn-primary" onClick={e => refund(e, order)}>Rembourser</button>
+                                                        {
+                                                            loadingRefundBtn === true && btnRefundClicked === order.orderId ? <>
+                                                                <button className="btn btn-disabled">Rembourser</button>
+                                                            </> : <>
+                                                                <button className="btn btn-primary" onClick={e => refund(e, order)}>Rembourser</button>
+                                                            </>
+                                                        }
+                                                            
                                                         </>
                                                     }   
                                                 </td>
@@ -398,20 +420,18 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                             </tbody> 
                         </table>
                     </div>
-
-                                                
-                        <div className="p-0.3">
-                            <ResponsivePagination
-                            total={Math.ceil(orderCount / size) }
-                            previousLabel="‹" nextLabel="›"
-                            current={currentPage}
-                            onPageChange={page => {
-                                setOffset((page-1) * size)
-                                setCurrentPage(page)
-                        }}
-                            />
-                        </div>
-
+        
+                    <div className="p-0.3 m-[0.5em]">
+                        <ResponsivePagination
+                        total={Math.ceil(orderCount / size) }
+                        previousLabel="‹" nextLabel="›"
+                        current={currentPage}
+                        onPageChange={page => {
+                            setOffset((page-1) * size)
+                            setCurrentPage(page)
+                    }}
+                        />
+                    </div>
 
                     </>
 

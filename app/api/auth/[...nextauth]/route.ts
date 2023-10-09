@@ -10,7 +10,7 @@ export const authOptions:NextAuthOptions = {
         GitHub({
             clientId: process.env.GITHUB_ID as string,
             clientSecret: process.env.GITHUB_SECRET as string,
-            authorization: { params: { scope: "email" } }, //openid is required for Google ( OIDC providers )
+            authorization: { params: { scope: "user:email repo" } }, //openid is required for Google ( OIDC providers )
             profile: (profile) => {
                 return {
                     id: profile.id,

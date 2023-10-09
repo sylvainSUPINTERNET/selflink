@@ -18,8 +18,6 @@ export default function TestLayout({
 
     const [userData, setUserData] = React.useState<any|null>(null);
     
-    console.log("XD", session, status);
-
     useEffect( () => {
       if (session && status === 'authenticated') {
         setUserData(session.user);
@@ -34,7 +32,7 @@ export default function TestLayout({
               <nav className="mb-0 md:mb-5 ">
                 <div className="navbar bg-base-100 ">
                   <div className="flex-1">
-                    <a className="btn btn-ghost normal-case text-xl">Dashboard</a>
+                    <a className="btn btn-ghost normal-case text-xl" href="/">Accueil</a>
                   </div>
                   <div className="flex-none gap-2">
                     <div className="dropdown dropdown-end">
@@ -46,7 +44,7 @@ export default function TestLayout({
                       <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                         <li>
                           <a className="justify-between">
-                            Profile {userData?.name}
+                            {userData?.email}
                           </a>
                         </li>
                         <li><a onClick={e => signOut({callbackUrl: process.env.LOGOUT_REDIRECT_URL})}>Logout</a></li>

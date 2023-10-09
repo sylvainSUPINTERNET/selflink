@@ -20,7 +20,6 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
 
 
     useEffect( () => {
-        console.log("effect selector link")
         if ( data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.length > 0 ) {
             setInitLink(data?.response?.data[0]?.paymentLinks[0].identifier);
             setPaymentLinkUrl(data?.response?.data[0]?.paymentLinks[0].paymentUrl)
@@ -29,8 +28,8 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
     }, [data]) 
 
 
-    const refreshLink = () => {
-        mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`);
+    const refreshLink = async () => {
+        await mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`);
     }
     
     if (error) return <div>
