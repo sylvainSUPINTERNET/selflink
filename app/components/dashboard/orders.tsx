@@ -124,8 +124,6 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
             setTagged([]);
         }
 
-
-
     }
 
     // const generateCellBg = (order:Order) => {
