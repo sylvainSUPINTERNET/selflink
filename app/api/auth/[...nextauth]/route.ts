@@ -5,6 +5,9 @@ import GitHub from "next-auth/providers/github"
 
 
 export const authOptions:NextAuthOptions = {
+    pages : {
+      "signIn": "/auth/signin",
+    },
     debug: process.env.ENV === "dev" ? true: false,
     providers: [
         GitHub({
