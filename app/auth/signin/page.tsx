@@ -12,8 +12,13 @@ export default function SignIn()  {
         return { redirect: { destination: "/dashboard" } };
     }
 
+
+    //TODO
+
+    // use authOptions.providers to display buttons instead of hardcoded btn !
     return (
         <>
+
         
             {/* {
                 Object.values(authOptions.providers!).map((provider:any) => (
@@ -24,9 +29,12 @@ export default function SignIn()  {
                     </div>
                 ))
             } */}
+
             
             <div className="min-h-screen flex items-center justify-center bg-black">
                 <div className="shadow-md w-3/4 h-[50em] bg-black rounded-lg overflow-hidden">
+                    <a href="/" className="text-white text-4xl font-bold">Acceuil</a>
+
                     <div className="flex h-full">
 
                         {/* Left - Branding or Image section */}
@@ -35,6 +43,7 @@ export default function SignIn()  {
                                 <p>Self <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-pink-500">Link</span></p>
                             </div>
                         </div>
+                        
 
                         
 

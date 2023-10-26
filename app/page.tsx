@@ -55,7 +55,7 @@ export default function Home() {
                     </div>
 
                     <div className="mb-6 font-extrabold text-4xl md:text-6xl text-white leading-1 tracking-tighter text-center">
-                        <p><span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-pink-500">Vendez</span> à votre audience <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-pink-500">simplement</span></p>
+                        <p><span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-pink-500">Vendez</span> à votre audience <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-pink-500">avec juste un lien !</span></p>
                     </div>
 
                     <br className='hidden md:block'></br>  
