@@ -8,7 +8,7 @@ export default function LoadingFormLink() {
       {
         [...Array(8)].map((e, i) => {
           return (
-            <Skeleton count={3} className='mb-5' />
+            <Skeleton key={i} count={3} className='mb-5' />
           )
         })
       }

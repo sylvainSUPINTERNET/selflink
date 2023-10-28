@@ -13,19 +13,19 @@ export const authOptions:NextAuthOptions = {
     },
     debug: process.env.ENV === "dev" ? true: false,
     providers: [
-        GitHub({
-            clientId: process.env.GITHUB_ID as string,
-            clientSecret: process.env.GITHUB_SECRET as string,
-            authorization: { params: { scope: "user:email repo" } }, //openid is required for Google ( OIDC providers )
-            profile: (profile) => {
-                return {
-                    id: profile.id,
-                    name: profile.name,
-                    email: profile.email,
-                    image: profile.avatar_url
-                }
-            },
-        }),
+        // GitHub({
+        //     clientId: process.env.GITHUB_ID as string,
+        //     clientSecret: process.env.GITHUB_SECRET as string,
+        //     authorization: { params: { scope: "user:email repo" } }, //openid is required for Google ( OIDC providers )
+        //     profile: (profile) => {
+        //         return {
+        //             id: profile.id,
+        //             name: profile.name,
+        //             email: profile.email,
+        //             image: profile.avatar_url
+        //         }
+        //     },
+        // }),
         Google({
           clientId: process.env.GOOGLE_ID as string,
           clientSecret: process.env.GOOGLE_SECRET as string,

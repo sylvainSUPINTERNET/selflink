@@ -263,7 +263,7 @@ export default function FormLinkComponent(props:any) {
                         </label>
                         <input type="text" placeholder="https://img.example.com/image.jpg" className="input input-bordered" {...register("images", { required: true , validate:isValidURL})} />
                         <div className="mt-2 text-sm">
-                            <p>Pas d'image pour le moment ? <span className="font-bold">télécharger</span> votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a> et <span className="font-bold">copier/coller</span> votre <span className="font-bold">Direct link</span> généré ici</p>
+                            <p>Pas d&rsquo;image pour le moment ? <span className="font-bold">télécharger</span> votre image sur <a className="text-blue-400" target="blank" href="https://postimages.org">https://postimages.org</a> et <span className="font-bold">copier/coller</span> votre <span className="font-bold">Direct link</span> généré ici</p>
                         </div>
                         <div className="p-0.5 min-h-[2.2em]">
                             {errors.images && <p className="text-red-500 font-bold text-sm">URL invalide</p>}
