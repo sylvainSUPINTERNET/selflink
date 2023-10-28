@@ -20,7 +20,7 @@ export default function SignIn()  {
         <>
 
         
-            {/* {
+            {
                 Object.values(authOptions.providers!).map((provider:any) => (
                     <div key={provider.name}>
                         <button onClick={() => signIn(provider.id)}>
@@ -28,7 +28,7 @@ export default function SignIn()  {
                         </button>
                     </div>
                 ))
-            } */}
+            }
 
             
             <div className="min-h-screen flex items-center justify-center bg-black">
