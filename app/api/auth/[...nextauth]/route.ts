@@ -2,6 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import FacebookProvider  from "next-auth/providers/facebook"
+import TwitchProvider  from "next-auth/providers/twitch"
 
 //https://github.com/nextauthjs/next-auth-example/blob/main/auth.ts
 
@@ -39,6 +40,10 @@ export const authOptions:NextAuthOptions = {
         FacebookProvider ({
           clientId: process.env.META_ID as string,
           clientSecret: process.env.META_SECRET as string,
+        }),
+        TwitchProvider({
+          clientId: process.env.TWITCH_ID as string,
+          clientSecret: process.env.TWITCH_SECRET as string,
         })
 
     ],
