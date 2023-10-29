@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useSession } from "next-auth/react"
 import { useEffect } from "react"
 import useSWR, { mutate } from "swr"
 
@@ -11,12 +12,18 @@ export type PaymentLink = {
 
 
 // TODO : use real paymentLink + verif token
-const fetcher = (url:string) => axios.post(url, {
-    "email": "email@email.com"
+const fetcher = (url:string, tokenEmail:string | undefined | null) => axios.post(url, {
+    "email": tokenEmail
 }).then(res => res.data)
 
 export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymentLinkUrl}: { changePaymentLink: any, setInitLink: any, setPaymentLinkUrl:any }) => {
-    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`, fetcher);
+    
+    const {data:session,status} = useSession();
+    
+    
+    // const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`, fetcher);
+
+    const { data, error, isLoading } = useSWR([`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`, session!.user?.email], ([url, tokenEmail]) => fetcher(url, tokenEmail));
 
 
     useEffect( () => {
