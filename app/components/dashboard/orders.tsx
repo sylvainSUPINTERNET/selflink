@@ -437,7 +437,7 @@ export const OrdersList = ({paymentLinkInit, paymentLinkInitUrl, offset, setOffs
                 :
                     <>
                         <div className="flex justify-center items-center h-2/4">
-                            <p className="text-xl font-medium">Pas de commande en cours pour le moment</p>
+                            <p className="text-xl font-bold mt-5">Pas de commande en cours pour le moment</p>
                         </div>
                     </>
             }

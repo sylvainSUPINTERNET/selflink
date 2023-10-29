@@ -14,6 +14,8 @@ const animatedComponents = makeAnimated();
 
 export default function FormLinkComponent(props:any) {
 
+    const {data:session,status} = useSession();
+
     const { register, handleSubmit, formState:{errors}, reset, control } = useForm();
 
     const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -58,6 +60,7 @@ export default function FormLinkComponent(props:any) {
                         "iban": data.iban,
                         // "category": data.category,
                         // "subcategory": data.subcategory,
+                        "email": session?.user?.email,
                         "description": data.description,
                         "images": [data.images],
                         "linkName": data.linkName,
@@ -134,7 +137,7 @@ export default function FormLinkComponent(props:any) {
                             <label className="label">
                             <span className="text-sm font-bold">Nom du lien<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="Nom du lien" className="input input-bordered h-8" {...register("linkName", { required: true, maxLength:100, minLength:1 })} />
+                            <input type="text" placeholder="Nom du lien" className="input input-bordered font-bold  h-8" {...register("linkName", { required: true, maxLength:100, minLength:1 })} />
                             <div className="p-0.5 min-h-[2.2em]">
                                 {errors.linkName && <p className="text-red-500 font-bold text-sm">Valeur doit être en 1 et 100 caractères</p>}
                             </div>
