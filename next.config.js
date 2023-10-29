@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Workaround for 
-
   // BUG
   // does not match the required types of a Next.js Route.
   // "authOptions" is not a valid Route export field.
