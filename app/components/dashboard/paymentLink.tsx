@@ -36,7 +36,7 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
 
 
     const refreshLink = async () => {
-        await mutate(`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`);
+        await mutate([`${process.env.NEXT_PUBLIC_API_URL as string}/paymentLink`, session!.user?.email]);
     }
     
     if (error) return <div>
@@ -57,17 +57,18 @@ export const PaymentLinkSelector = ({ changePaymentLink , setInitLink, setPaymen
 
     return <>
         <div className="flex space-x-3">
-
+            
             <select onClick={e => refreshLink()} className="select select-primary w-full max-w-xs mb-5" onChange={e => {
-                const filtered = data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.filter((link:PaymentLink) => link.identifier === e.target.value);
+                const filtered = data?.response?.data && data.response.data.filter((link:PaymentLink) => link.identifier === e.target.value);
                 if ( filtered && filtered.length > 0 ) {
+                    {JSON.stringify("XD")}
                     changePaymentLink(e.target.value, filtered[0].paymentUrl);
                 } else {
                     changePaymentLink(e.target.value, "Pas de lien de paiement");
                 }
             } }>
                 {
-                    data?.response?.data[0]?.paymentLinks && data.response.data[0].paymentLinks.map((link:PaymentLink) => (
+                    data?.response?.data && data.response.data.map((link:PaymentLink) => (
                         <option key={link.id} value={link.identifier}>{`${link.name}`}</option>
                     ))
                 } 
