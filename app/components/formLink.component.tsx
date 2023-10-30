@@ -70,15 +70,6 @@ export default function FormLinkComponent(props:any) {
     const onSubmitNewLink = ( data :any ) => {
         const currency = "EUR";
 
-
-        // TODO can upload only image PNG / JPEG / JPG 
-        // TODO limit size image 1Mo
-
-        // TODO 
-        //  https://blog.logrocket.com/firebase-cloud-storage-firebase-v9-react/
-        // https://www.newline.co/@satansdeer/handling-file-fields-using-react-hook-form--93ebef46
-
-
         setLoadingSubmit(true);
 
         setTimeout( async () => {
@@ -90,13 +81,55 @@ export default function FormLinkComponent(props:any) {
                 const fileResized = await resizeFile(file);
                 const uploadTask = uploadBytesResumable(storageRef, fileResized!);
 
-                console.log(storageRef.name);
-
                 uploadTask.on('state_changed',
-                (snapshot) => {
+                async (snapshot) => {
                     // progress function ...
                     const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
                     console.log(progress);
+
+                    if ( progress === 100 ) {
+                        const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL as string}/products`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                "name": data.name,
+                                "price": data.price,
+                                "quantity": data.quantity,
+                                "currency": currency,
+                                "iban": data.iban,
+                                // "category": data.category,
+                                // "subcategory": data.subcategory,
+                                "email": session?.user?.email,
+                                "description": data.description,
+                                "images": [data.images],
+                                "linkName": data.linkName,
+                                "countriesShipping": data.countries.map((country:any) => country.value)
+                            })
+                        });
+            
+                        const res = await req.json();
+            
+                        if  ( req.status === 200 ) {
+        
+                            toast.success('Lien de paiement ajouté !', {
+                                position: "top-center",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                            });
+        
+                            reset()
+                            setLoadingSubmit(false);
+                        } else {
+                            setLoadingSubmit(false);
+                        }
+                    }
                 },
                 (error) => {
                     setLoadingSubmit(false);
@@ -108,49 +141,7 @@ export default function FormLinkComponent(props:any) {
                     // getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     //     setImgUrl(downloadURL)
                     //   });
-                });
-
-                const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL as string}/products`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "name": data.name,
-                        "price": data.price,
-                        "quantity": data.quantity,
-                        "currency": currency,
-                        "iban": data.iban,
-                        // "category": data.category,
-                        // "subcategory": data.subcategory,
-                        "email": session?.user?.email,
-                        "description": data.description,
-                        "images": [data.images],
-                        "linkName": data.linkName,
-                        "countriesShipping": data.countries.map((country:any) => country.value)
-                    })
-                });
-    
-                const res = await req.json();
-    
-                if  ( req.status === 200 ) {
-
-                    toast.success('Lien de paiement ajouté !', {
-                        position: "top-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    });
-
-                    reset()
-                    setLoadingSubmit(false);
-                }else {
-                    setLoadingSubmit(false);
-                }
+                }); 
     
             } catch ( e ) {
                 setLoadingSubmit(false);
