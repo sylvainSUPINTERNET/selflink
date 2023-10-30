@@ -76,7 +76,9 @@ export default function FormLinkComponent(props:any) {
 
             try {
                 const file = data.fileImages[0];
-                const storageRef = ref(storage, `images/${file.name}-${uuidv4()}`);
+                const newFileName: string =  `${uuidv4()}-${file.name}`;
+
+                const storageRef = ref(storage, `${newFileName}`);
 
                 const fileResized = await resizeFile(file);
                 const uploadTask = uploadBytesResumable(storageRef, fileResized!);
@@ -103,7 +105,7 @@ export default function FormLinkComponent(props:any) {
                                 // "subcategory": data.subcategory,
                                 "email": session?.user?.email,
                                 "description": data.description,
-                                "images": [data.images],
+                                "images": [`${newFileName}`],
                                 "linkName": data.linkName,
                                 "countriesShipping": data.countries.map((country:any) => country.value)
                             })
@@ -314,7 +316,7 @@ export default function FormLinkComponent(props:any) {
                         </div>
                     </div>
 
-                    <div className="form-control">
+                    {/* <div className="form-control">
                         <label className="label">
                         <span className="text-sm font-bold">Image du produit<span className="text-red-500">*</span></span>
                         </label>
@@ -326,19 +328,32 @@ export default function FormLinkComponent(props:any) {
                             {errors.images && <p className="text-red-500 font-bold text-sm">URL invalide</p>}
                         </div>
                     </div>
+                     */}
 
-                    <input type="file" accept="image/jpg,image/jpeg,image/png"{...register("fileImages", 
-                    { 
-                        required: true, 
-                        validate: (value) => {
-                            const acceptedFormats = ['jpg', 'jpeg', 'png']; 
-                            const fileExtension = value[0]?.name.split('.').pop().toLowerCase();
-                            if (!acceptedFormats.includes(fileExtension)) {
-                                return 'Format non valide. Seuls les formats JPG, JPEG et PNG sont acceptés.';
+                    <div className="form-control">
+                        <label className="label">
+                        <span className="text-sm font-bold">Image du produit<span className="text-red-500">*</span></span>
+                        </label>
+                        <input type="file" accept="image/jpg,image/jpeg,image/png"{...register("fileImages", 
+                        { 
+                            required: true, 
+                            validate: (value) => {
+                                const acceptedFormats = ['jpg', 'jpeg', 'png']; 
+                                const fileExtension = value[0]?.name.split('.').pop().toLowerCase();
+                                if (!acceptedFormats.includes(fileExtension)) {
+                                    return 'Format non valide. Seuls les formats JPG, JPEG et PNG sont acceptés.';
+                                }
+                                return true;
                             }
-                            return true;
-                        }
-                    })}/>
+                        })}/>
+                        <div className="mt-2 text-sm">
+                            <p className="text-sm">PNG JPEG JPG acceptés</p>
+                        </div>
+                        <div className="p-0.5 min-h-[2.2em]">
+                            {errors.fileImages && <p className="text-red-500 font-bold text-sm">Image non valide</p>}
+                        </div>
+                    </div>
+
 
 
                     
@@ -347,7 +362,7 @@ export default function FormLinkComponent(props:any) {
                             !errors.name 
                             && !errors.price 
                             // && !errors.description 
-                            && !errors.images
+                            && !errors.fileImages
                             //&& !errors.category && !errors.subcategory 
                             && !errors.quantity
                             && !errors.currency
