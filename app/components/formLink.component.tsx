@@ -8,6 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useSession } from "next-auth/react";
+import Resizer from "react-image-file-resizer";
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 import { storage } from '../firebase';
@@ -25,6 +28,25 @@ export default function FormLinkComponent(props:any) {
     const { register, handleSubmit, formState:{errors}, reset, control } = useForm();
 
     const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+    const resizeFile = (file: File) => new Promise<Blob | null>((resolve, reject) => {
+        Resizer.imageFileResizer(
+            file,
+            800,
+            800,
+            'JPEG',
+            100,
+            0,
+            uri => {
+                if (uri instanceof Blob) {
+                    resolve(uri);
+                } else {
+                    reject(new Error('Failed to convert image to Blob format.'));
+                }
+            },
+            'blob' // Format de sortie en tant que Blob
+        );
+    });
 
     const options = [
         { label: 'FR', value: 'FR' },
@@ -50,6 +72,7 @@ export default function FormLinkComponent(props:any) {
 
 
         // TODO can upload only image PNG / JPEG / JPG 
+        // TODO limit size image 1Mo
 
         // TODO 
         //  https://blog.logrocket.com/firebase-cloud-storage-firebase-v9-react/
@@ -61,6 +84,32 @@ export default function FormLinkComponent(props:any) {
         setTimeout( async () => {
 
             try {
+                const file = data.fileImages[0];
+                const storageRef = ref(storage, `images/${file.name}-${uuidv4()}`);
+
+                const fileResized = await resizeFile(file);
+                const uploadTask = uploadBytesResumable(storageRef, fileResized!);
+
+                console.log(storageRef.name);
+
+                uploadTask.on('state_changed',
+                (snapshot) => {
+                    // progress function ...
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    console.log(progress);
+                },
+                (error) => {
+                    setLoadingSubmit(false);
+                    alert("Erreur lors du téléchargement de l'image")
+                    return;
+                },
+                () => {
+                    // set previeuw
+                    // getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    //     setImgUrl(downloadURL)
+                    //   });
+                });
+
                 const req = await fetch(`${process.env.NEXT_PUBLIC_API_URL as string}/products`, {
                     method: 'POST',
                     headers: {
@@ -85,6 +134,7 @@ export default function FormLinkComponent(props:any) {
                 const res = await req.json();
     
                 if  ( req.status === 200 ) {
+
                     toast.success('Lien de paiement ajouté !', {
                         position: "top-center",
                         autoClose: 5000,
@@ -141,7 +191,7 @@ export default function FormLinkComponent(props:any) {
                             <label className="label">
                             <span className="text-sm font-bold">Nom du produit<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="text" placeholder="Nom de produit" className="text-sm input input-bordered font-bold h-8" {...register("name", { required: true, maxLength:30, minLength:1 })}/>
+                            <input type="text" placeholder="Nom de produit" className="input input-bordered font-bold h-8" {...register("name", { required: true, maxLength:30, minLength:1 })}/>
                             <div className="p-0.5 min-h-[2.2em] ">
                                 {errors.name && <p className=" text-red-500 font-bold text-sm">Valeur doit être en 1 et 30 caractères</p>}
                             </div>
@@ -267,7 +317,7 @@ export default function FormLinkComponent(props:any) {
                         <label className="label">
                         <span className="text-sm font-bold">Description du produit<span className="text-red-500"></span></span>
                         </label>
-                        <textarea placeholder="A sample product description" className="textarea textarea-bordered text-sm h-10" {...register("description", { required: true, maxLength:155 })}></textarea>
+                        <textarea placeholder="A sample product description" className="textarea textarea-bordered  h-10" {...register("description", { required: true, maxLength:155 })}></textarea>
                         <div className="p-0.5 min-h-[2.2em]">
                             {errors.description && <p className="text-red-500 font-bold text-sm">Description du produit non valide, 155 caractères maximum</p>}
                         </div>
@@ -286,7 +336,18 @@ export default function FormLinkComponent(props:any) {
                         </div>
                     </div>
 
-                    <input type="file" accept="image/jpg,image/jpeg,image/png"{...register("fileImages", { required: true })}/>
+                    <input type="file" accept="image/jpg,image/jpeg,image/png"{...register("fileImages", 
+                    { 
+                        required: true, 
+                        validate: (value) => {
+                            const acceptedFormats = ['jpg', 'jpeg', 'png']; 
+                            const fileExtension = value[0]?.name.split('.').pop().toLowerCase();
+                            if (!acceptedFormats.includes(fileExtension)) {
+                                return 'Format non valide. Seuls les formats JPG, JPEG et PNG sont acceptés.';
+                            }
+                            return true;
+                        }
+                    })}/>
 
 
                     
