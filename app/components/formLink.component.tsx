@@ -9,6 +9,12 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { useSession } from "next-auth/react";
 
+
+import { storage } from '../firebase';
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+
+import './formlink.css'
+
 let ibantools = require("ibantools")
 const animatedComponents = makeAnimated();
 
@@ -41,6 +47,14 @@ export default function FormLinkComponent(props:any) {
 
     const onSubmitNewLink = ( data :any ) => {
         const currency = "EUR";
+
+
+        // TODO can upload only image PNG / JPEG / JPG 
+
+        // TODO 
+        //  https://blog.logrocket.com/firebase-cloud-storage-firebase-v9-react/
+        // https://www.newline.co/@satansdeer/handling-file-fields-using-react-hook-form--93ebef46
+
 
         setLoadingSubmit(true);
 
@@ -142,8 +156,7 @@ export default function FormLinkComponent(props:any) {
                                 {errors.linkName && <p className="text-red-500 font-bold text-sm">Valeur doit être en 1 et 100 caractères</p>}
                             </div>
                         </div>
-                    </div>
-                    
+                    </div>                    
 
                     <div>
                         <Controller
@@ -272,6 +285,9 @@ export default function FormLinkComponent(props:any) {
                             {errors.images && <p className="text-red-500 font-bold text-sm">URL invalide</p>}
                         </div>
                     </div>
+
+                    <input type="file" accept="image/jpg,image/jpeg,image/png"{...register("fileImages", { required: true })}/>
+
 
                     
                     <div className="form-control">
