@@ -101,20 +101,20 @@ export default function Home() {
 
 
                     <div className='flex justify-center space-x-3 md:p-8 text-center'>
-                        <a href="/dashboard" className="text-md md:text-2xl relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden group rounded-md">
+                        <a href="/dashboard" className="text-md md:text-4xl relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden group rounded-md">
                           <span className="w-full h-full bg-gradient-to-br from-[#ff05c1] via-[#ff5478] to-[#ff00c6] group-hover:from-[#ff00c6] group-hover:via-[#ff5478] group-hover:to-[#ff8a05] absolute"></span>
                           <span className="relative px-6 py-3 transition-all ease-out bg-black rounded-md group-hover:bg-opacity-0 duration-400">
                           <span className="relative text-white">Commencez</span>
                           </span>
                         </a>
-                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" className="text-md md:text-2xl relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden group rounded-md">
+                        {/* <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" className="text-md md:text-2xl relative p-0.5 inline-flex items-center justify-center font-bold overflow-hidden group rounded-md">
                           <span className="w-full h-full bg-gradient-to-br from-[#ff05c1] via-[#ff5478] to-[#ff00c6] group-hover:from-[#ff00c6] group-hover:via-[#ff5478] group-hover:to-[#ff8a05] absolute"></span>
                           <span className="relative px-6 py-3 transition-all ease-out bg-black rounded-md group-hover:bg-opacity-0 duration-400">
                           <span className="relative text-white">La démo</span>
                           </span>
-                        </a>
-          
+                        </a> */}
                     </div>
+                
 
                 </div>
 
