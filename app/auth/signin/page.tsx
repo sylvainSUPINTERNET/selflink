@@ -1,7 +1,8 @@
 "use client";
 
-import { signIn, useSession } from "next-auth/react"
+import { getSession, signIn, useSession } from "next-auth/react"
 import { authOptions } from '../../api/auth/[...nextauth]/route';
+import { useEffect } from "react";
 
 
 function displaySocialBtn(provider: any) {
@@ -60,18 +61,34 @@ function displaySocialBtn(provider: any) {
         </div>);
 }
 
+
 export default function SignIn()  {
 
-    const { data: session } = useSession();
+
+    const { data: session, status } = useSession();
 
 
-    if (session) {
-        return { redirect: { destination: "/dashboard" } };
+    useEffect ( () => {
+        if (status === 'authenticated') {
+            window.location.href = "/dashboard";
+        }
+    }, [status])
+    
+  if (status === 'loading') {
+        return   <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+    </div>;
+    }
+
+    if ( status === "authenticated") {
+        return (<div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+        </div>);
     }
 
     return (
-        <>
 
+        <>
             <div className="flex text-white bg-black min-h-screen items-center space-x-5 bg-cover bg-no-repeat" style={{backgroundImage: "url('../ggglitch.svg')"}}>
                 
                 <div className="flex backdrop-blur-md bg-opacity-50 w-full justify-center min-h-screen items-center bg-black">
@@ -88,15 +105,15 @@ export default function SignIn()  {
                                     displaySocialBtn(provider)
                                 ))
                             }
-                       </div>
+                    </div>
 
-                       <div className="flex justify-center mt-5">
+                    <div className="flex justify-center mt-5">
                             <button onClick={ () => {
                                 window.location.href = "/";
                             }} type="button" className="border-solid border-2 border-indigo-600 text-xl py-2 px-4  bg-black hover:bg-gray-700 focus:ring-gray-500 focus:ring-offset-gray-200 text-white w-full transition ease-in duration-200 text-center font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                                 Accueil
                             </button>
-                       </div>
+                    </div>
 
 
                     </div>
@@ -104,40 +121,7 @@ export default function SignIn()  {
                 </div>
 
             </div>
-{/*         
-            <div className="min-h-screen flex items-center justify-center bg-black">
-                <div className="shadow-md w-3/4 h-[50em] bg-black rounded-lg overflow-hidden">
-                    <a href="/" className="text-white text-4xl font-bold">Acceuil</a>
-
-                    <div className="flex h-full">
-
-                        <div className="flex items-center justify-center bg-black w-1/2 rounded-tl-lg rounded-bl-lg p-9">
-                            <div className="mb-6 font-extrabold text-6xl md:text-8xl text-white leading-1 tracking-tighter text-center">
-                                <p>Self <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-pink-500">Link</span></p>
-                            </div>
-                        </div>
-                        
-
-                        
-
-                        <div className="w-1/2 bg-cover bg-no-repeat p-8 flex flex-col justify-center rounded-tr-lg rounded-br-lg" style={{
-                            backgroundImage: "url('../ggglitch.svg')"
-                        }}>
-                            <div className="space-y-4 justify-center">
-
-                                {
-                                    Object.values(authOptions.providers!).map((provider:any) => (
-                                        displaySocialBtn(provider)
-                                    ))
-                                }
-   
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div> */}
-
         </>
     )
+      
 }
