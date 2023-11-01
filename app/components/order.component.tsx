@@ -26,6 +26,7 @@ export default function OrdersComponent() {
     }
 
     useEffect ( () => {
+        console.log(paymentLinkInit)
     }, [paymentLinkInit, paymentLinkInitUrl, offset]);
 
 
@@ -37,7 +38,6 @@ export default function OrdersComponent() {
                 <h1 className="rounded-lg text-2xl font-bold mb-5">Commandes</h1>
        
                 <PaymentLinkSelector changePaymentLink={onChangePaymentLink} setInitLink={setPaymentLinkInit} setPaymentLinkUrl={setPaymentLinkInitUrl}/>
-
                 <OrdersList paymentLinkInit={paymentLinkInit} paymentLinkInitUrl={paymentLinkInitUrl} offset={offset} setOffset={setOffset}/>    
 
                 </>

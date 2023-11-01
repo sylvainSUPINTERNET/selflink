@@ -246,7 +246,7 @@ export default function FormLinkComponent(props:any) {
                             <label className="label">
                             <span className="text-sm font-bold">Prix unitaire<span className="text-red-500">*</span></span>
                             </label>
-                            <input type="number" placeholder="2" className="input input-bordered font-bold h-8" {...register("price", { required: true, min:2 })}/>
+                            <input type="number" placeholder="2" step="0.01" className="input input-bordered font-bold h-8" {...register("price", { required: true, min:2 })}/>
                             <div className="p-0.5 min-h-[2.2em]">
                                 {errors.price && <p className=" text-red-500 font-bold text-sm">Prix invalide, 2 minimum</p>}
                             </div>
