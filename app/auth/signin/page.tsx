@@ -1,7 +1,8 @@
 "use client";
 
+import { authOptions } from "@/app/utils/authOptions";
 import { getSession, signIn, useSession } from "next-auth/react"
-import { authOptions } from '../../api/auth/[...nextauth]/route';
+
 import { useEffect } from "react";
 
 

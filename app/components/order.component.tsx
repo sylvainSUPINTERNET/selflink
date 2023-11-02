@@ -1,7 +1,6 @@
 "use client";
 
 import { Session, getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import AuthGuard from "../guard/authguard";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
