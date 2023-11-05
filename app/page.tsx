@@ -214,7 +214,7 @@ export default function Home() {
     <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
         <div className="mb-8 max-w-screen-md lg:mb-16">
             <h2 className="mb-4 text-4xl font-extrabold text-gray-900 dark:text-white">La simplicité avant tout</h2>
-            <p className="text-gray-500 sm:text-xl dark:text-gray-400">Votre lien de paiement disponible en moins d'une minute.</p>
+            <p className="text-gray-500 sm:text-xl dark:text-gray-400">Votre lien de paiement disponible en moins d&apos;une minute.</p>
         </div>
         <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
             {/* Bloc "Rapide" */}
@@ -236,7 +236,7 @@ export default function Home() {
                 {/* Icône pour "Support plusieurs paiements" */}
                 {/* Mettez ici le code SVG de votre choix */}
                 <h3 className="mb-2 text-xl font-bold dark:text-white">Support plusieurs paiements</h3>
-                <p className="text-gray-500 dark:text-gray-400">Compatibilité avec une variété de méthodes de paiement pour faciliter l'accès à tous vos clients.</p>
+                <p className="text-gray-500 dark:text-gray-400">Compatibilité avec une variété de méthodes de paiement pour faciliter l&apos;accès à tous vos clients.</p>
             </div>
             {/* Bloc "Dashboard de suivi" */}
             <div>
