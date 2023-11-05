@@ -242,7 +242,7 @@ export default function Home() {
             <div>
                 {/* Icône pour "Dashboard de suivi" */}
                 {/* Mettez ici le code SVG de votre choix */}
-                <h3 className="mb-2 text-xl font-bold dark:text-white">Dashboard de suivi</h3>
+                <h3 className="mb-2 text-xl font-bold dark:text-white">Dashboard</h3>
                 <p className="text-gray-500 dark:text-gray-400">Un tableau de bord intuitif pour suivre et gérer toutes vos transactions en temps réel.</p>
             </div>
         </div>
