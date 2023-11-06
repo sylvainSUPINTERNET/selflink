@@ -76,15 +76,16 @@ export default function Home() {
                 <h1 className="mb-4 max-w-2xl text-4xl font-extrabold leading-none md:text-5xl xl:text-6xl dark:text-white">Simplifiez vos transactions : des liens de paiement rapides et sécurisés</h1>
                 <p className="mb-6 max-w-2xl font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Concentrez vous seulement sur votre tunnel de vente</p>
 
-                <div className='space-x-3'>
-                    <a href="/dashboard" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-gradient-to-r from-blue-800 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-900">
+                <div className='flex flex-nowrap space-x-3'>
+                    <a href="/dashboard" className="inline-flex justify-center items-center py-3 sm:px-2 px-5 text-base font-medium text-center text-white rounded-lg bg-gradient-to-r from-blue-800 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-900">
                         Commencer
                         <svg className="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     </a>
-                    <a href="#" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    <a href="#" className="inline-flex justify-center items-center py-3 sm:px-2 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
                         Nous contacter
                     </a> 
                 </div>
+
 
             </div>
             <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
@@ -278,49 +279,70 @@ export default function Home() {
       </section> */}
 
 
-<section className=" dark:bg-gray-800" id="pricing">
-    <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
-        <div className="mb-8 max-w-screen-md lg:mb-16">
-            <h2 className="mb-4 text-4xl font-extrabold text-gray-900 dark:text-white">Pricing</h2>
-            {/* <p className="text-gray-500 sm:text-xl dark:text-gray-400">Votre lien de paiement disponible en moins d'une minute.</p> */}
-        </div>
-        <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-            <ul role="list" className="mb-8 space-y-4 text-left">
-                <li className="flex items-center space-x-3">
-                    <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    <span>Pas de limite de liens</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                    <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    <span>Dashboard commandes</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                    <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    <span>Support</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                    <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                    <span>Pas besoin de carte</span>
-                </li>
-            </ul>
+    <section className=" dark:bg-gray-800" id="pricing">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
 
-            <div>
-                <span className='text-4xl font-medium  leading-1 tracking-tighter'>2.5%</span> <span className='ml-3 text-gray-500 sm:text-xl dark:text-gray-400'>de frais par vente TTC</span>
-            </div>
-
-            <div>
-                <a href="/dashboard" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-gradient-to-r from-blue-800 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-900">
-                        Commencer
-                        <svg className="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            
+        <div className="flex space-x-5 sm:justify-center">
+            <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
+                <img src="/lmess.png" alt="mockup"/>
+            </div> 
+            <div className='py-8 px-8'>
+                <div className="mb-4">
+                    <span className='text-4xl font-medium leading-1 tracking-tighter'>2.5%</span>
+                    <span className='ml-3 text-gray-500 sm:text-xl dark:text-gray-400'>de frais par vente TTC</span>
+                </div>
+                <div> 
+                    <a href="/dashboard" className="inline-flex justify-center items-center py-3 sm:px-2 px-5 text-base font-medium text-center text-white rounded-lg bg-gradient-to-r from-blue-800 to-purple-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-900">
+                        Démarrer gratuitement
+                        <svg className="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                     </a>
+                </div>
             </div>
-
         </div>
 
 
-        
-    </div>
-</section>
+
+            {/* <div className="mb-8 max-w-screen-md lg:mb-16">
+                <h2 className="mb-4 text-4xl font-extrabold text-gray-900 dark:text-white">Pricing</h2>
+            </div>
+            <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+                <ul role="list" className="mb-8 space-y-4 text-left">
+                    <li className="flex items-center space-x-3">
+                        <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                        <span>Pas de limite de liens</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                        <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                        <span>Dashboard commandes</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                        <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                        <span>Support</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                        <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                        <span>Pas besoin de carte</span>
+                    </li>
+                </ul>
+
+                <div>
+                    <div className="hidden lg:mt-0 lg:col-span-5 lg:flex h-[45em] w-[45em]">
+                        <img src="/xd.png" alt="mockup"/>
+                    </div>  
+                </div>
+
+
+                <div>
+                    <span className='text-4xl font-medium  leading-1 tracking-tighter'>2.5%</span> <span className='ml-3 text-gray-500 sm:text-xl dark:text-gray-400'>de frais par vente TTC</span>
+                </div>
+
+
+            </div> */}
+            
+        </div>
+    </section>
+
 
         {/* FOOTER */}
         {/* <div className="p-4 bg-gray-50 sm:p-6 dark:bg-gray-800">
